@@ -1,6 +1,6 @@
-# shill-city-capital
+# shill-city-pfp
 
-Sea Shanties official staking repo.
+Sea Shanties pfp official staking repo.
 
 There's a wallet you can load into your phantom in ./lib
 

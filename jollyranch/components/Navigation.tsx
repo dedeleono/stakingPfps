@@ -4,13 +4,18 @@ import WalletMultiButtonStyled from "./shared/WalletMultiButtonStyled";
 const navigationItems = [
     {
         id: "shill-city-capital",
-        title: "Shill City Capital",
+        title: "Shanties",
         href: "https://staking.shill-city.com/"
     },
     {
         id: "pet-palace",
         title: "Pet Palace",
         href: "https://pets.shill-city.com/"
+    },
+    {
+        id: "shill-city-citizen",
+        title: "Citizen",
+        href: "https://citizen.shill-city.com/"
     },
     {
         id: "poseidon-lp",

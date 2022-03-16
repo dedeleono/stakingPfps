@@ -30,11 +30,10 @@ const NFTLoader: FC<NFTLoaderProps> = ({
     return (
       <div
         key={nft.nft_account.id.toString() || Math.random()}
-        className="card w-72 m-4 card-bordered card-compact shadow-2xl bg-primary-content text"
-        style={{border: 'solid 1px white'}}
+        className="card w-72 m-4 card-compact shadow-2xl bg-primary-content text bg-opacity-90"
       >
         <figure>
-          <img src={`${nft.image}`} alt="sea shanties nft image" />
+          <img src={`${nft.image}`} alt={nft.name} />
         </figure>
         <div className="card-body text-center items-center">
           <h2
@@ -100,7 +99,7 @@ const NFTLoader: FC<NFTLoaderProps> = ({
     return (
       <div
         key={nft.id.toString() || Math.random()}
-        className="card w-72 m-4 card-bordered card-compact lg:card-normal shadow-2xl bg-primary-content text"
+        className="card w-72 m-4 card-compact shadow-2xl bg-primary-content text bg-opacity-90"
       >
         <figure>
           <img src={`${nft.image}`} alt="sea shainties nft image" />
