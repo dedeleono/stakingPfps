@@ -1,6 +1,5 @@
 import create from "zustand";
 import * as anchor from "@project-serum/anchor";
-//TODO change to PfpIDL
 import shillCityIDL from "../lib/nft_staker.json";
 import { AnchorWallet } from "@solana/wallet-adapter-react";
 import { ConfirmOptions, Connection, PublicKey } from "@solana/web3.js";
@@ -17,6 +16,15 @@ import { programs } from "@metaplex/js";
 const {
   metadata: { Metadata },
 } = programs;
+
+const legendaryMints = [
+  "9Gd3CpPFgK5PbfRnEuhF2JmDSUFEyWkHPkB7GA4SfSdA",
+  "APA8t9faSRNdZvB1opJvB5DQ8h3aeCFyNxZiaCMSArTZ",
+  "FrLGhta8fHTcyFTqiTDUwiDiG59L5xnvnqJwS2ssVXu7",
+  "662zoahSfHgZYjQ9bzcS8MzqRfsF2H1h549uZUebC4e6",
+  "Fs9SpcHN8J7PN8gjmp7Xvhae8EA4Zwifa79eNCQHJNgW",
+  "4j99GW37LGL1Er7otAsqRdWgNDt9srZguim9n4rFCoDj",
+];
 
 type PfpState = {
   program: any;
@@ -314,20 +322,10 @@ const usePfpStore = create<UsePfpStore>((set: any, get: any) => ({
     // console.log("allStakedMints", allStakedMints);
     allStakedMints.map((nft) => {
       if (nft) {
-        // console.log("nft", nft);
-        //TODO Change mints?
-        const mints = [
-          "9Gd3CpPFgK5PbfRnEuhF2JmDSUFEyWkHPkB7GA4SfSdA",
-          "APA8t9faSRNdZvB1opJvB5DQ8h3aeCFyNxZiaCMSArTZ",
-          "FrLGhta8fHTcyFTqiTDUwiDiG59L5xnvnqJwS2ssVXu7",
-          "662zoahSfHgZYjQ9bzcS8MzqRfsF2H1h549uZUebC4e6",
-          "Fs9SpcHN8J7PN8gjmp7Xvhae8EA4Zwifa79eNCQHJNgW",
-          "4j99GW37LGL1Er7otAsqRdWgNDt9srZguim9n4rFCoDj",
-        ];
-        let redemption_rate = 6.9;
+        let redemption_rate = 4.2;
         // console.log("nft", nft.nft_account.account.mint.toString());
-        if (mints.includes(nft.nft_account.account.mint.toString())) {
-          redemption_rate = 16.9;
+        if (legendaryMints.includes(nft.nft_account.account.mint.toString())) {
+          redemption_rate = 10;
         }
         const currDate = new Date().getTime() / 1000;
         const daysElapsed =
