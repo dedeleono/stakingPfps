@@ -181,7 +181,7 @@ export default function Home() {
                             className="stat-title text-white"
                             style={{ fontFamily: "Montserrat" }}
                           >
-                            {((totalRatsStaked/3333)*100).toFixed(2)}% Citizen Staked
+                            {((totalRatsStaked/6666)*100).toFixed(2)}% Citizen Staked
                           </div>
                         </div>
                       </div>
