@@ -175,7 +175,7 @@ export default function Home() {
                       <div className="w-full mt-2">
                         <div className="stat bg-accent">
                           <div className="stat-value text-white">
-                            {totalRatsStaked.toLocaleString("en-US")}/3,333
+                            {totalRatsStaked.toLocaleString("en-US")}/6,666
                           </div>
                           <div
                             className="stat-title text-white"
@@ -217,7 +217,7 @@ export default function Home() {
                           <h1 className="text-4xl font-bold" style={{ fontFamily: "Jangkuy" }}>You don&apos;t have any Citizens 😥</h1>
                           <div className="mt-5 mb-8">
                             <a
-                                href="https://magiceden.io/marketplace/sea_shanties"
+                                href="https://magiceden.io/marketplace/sea_shanties_citizens"
                                 rel="noreferrer noopener"
                                 target="_blank"
                                 className="btn btn-lg btn-secondary"

@@ -14,8 +14,8 @@ const navigationItems = [
     },
     {
         id: "shill-city-citizen",
-        title: "Citizen",
-        href: "https://citizen.shill-city.com/"
+        title: "Citizens",
+        href: "https://citizens.shill-city.com/"
     },
     {
         id: "poseidon-lp",

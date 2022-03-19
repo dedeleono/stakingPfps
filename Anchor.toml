@@ -1,11 +1,11 @@
 [programs.localnet]
-nft_staker = "AH8QQSG2frNPYo9Ckqo9jzrPUixCQGJgL2jsApS3Kvkx"
+nft_staker = "EdYp85RTTNJJAFCXuCPc1uoSJuchchxEXr9W39tmktFu"
 
 [programs.devnet]
-nft_staker = "AH8QQSG2frNPYo9Ckqo9jzrPUixCQGJgL2jsApS3Kvkx"
+nft_staker = "EdYp85RTTNJJAFCXuCPc1uoSJuchchxEXr9W39tmktFu"
 
 [programs.mainnet]
-nft_staker = "AH8QQSG2frNPYo9Ckqo9jzrPUixCQGJgL2jsApS3Kvkx"
+nft_staker = "EdYp85RTTNJJAFCXuCPc1uoSJuchchxEXr9W39tmktFu"
 
 [registry]
 url = "https://anchor.projectserum.com"
