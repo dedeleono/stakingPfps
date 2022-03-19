@@ -67,8 +67,10 @@ const usePfpStore = create<UsePfpStore>((set: any, get: any) => ({
     const opts = {
       preflightCommitment: "processed" as ConfirmOptions,
     };
-    const endpoint =
-      "https://bold-withered-pond.solana-mainnet.quiknode.pro/608c8586df23a01f2bdbfd77fd8d54b5f87f3211/";
+    let endpoint = JSON.parse(
+        process.env.NEXT_PUBLIC_QUICKNODE_MAINNET_BETA_RPC_ENDPOINT
+    );
+    endpoint = endpoint[Math.floor(Math.random() * endpoint.length)];
     const connection = new anchor.web3.Connection(
       endpoint,
       opts.preflightCommitment
