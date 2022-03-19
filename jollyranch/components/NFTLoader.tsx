@@ -33,7 +33,7 @@ const NFTLoader: FC<NFTLoaderProps> = ({
         className="card w-72 m-4 card-compact shadow-2xl bg-primary-content text bg-opacity-90"
       >
         <figure>
-          <img src={`${nft.image}`} alt={nft.name} />
+          <img src={`${nft.image}`} alt={nft.name} loading='lazy'/>
         </figure>
         <div className="card-body text-center items-center">
           <h2
@@ -102,7 +102,7 @@ const NFTLoader: FC<NFTLoaderProps> = ({
         className="card w-72 m-4 card-compact shadow-2xl bg-primary-content text bg-opacity-90"
       >
         <figure>
-          <img src={`${nft.image}`} alt="sea shainties nft image" />
+          <img src={`${nft.image}`} alt="sea shainties nft image" loading='lazy'/>
         </figure>
         <div className="card-body">
           <h2
