@@ -1,7 +1,7 @@
 import create from "zustand";
 import * as anchor from "@project-serum/anchor";
 //TODO change to PfpIDL
-import shillCityIDL from "../../target/idl/shill_city.json";
+import shillCityIDL from "../lib/nft_staker.json";
 import { AnchorWallet } from "@solana/wallet-adapter-react";
 import { ConfirmOptions, Connection, PublicKey } from "@solana/web3.js";
 import { Program, Provider } from "@project-serum/anchor";
