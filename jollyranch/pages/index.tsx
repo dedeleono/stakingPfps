@@ -300,6 +300,7 @@ export default function Home() {
                       )} */}
                       {stakedMints.map((nft: any) => {
                         // console.log("mint nft", nft);
+                        if(!nft) return;
                         return (
                           <NFTLoader
                             key={nft.name}
