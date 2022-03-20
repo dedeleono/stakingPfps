@@ -36,7 +36,7 @@ const NFTLoader: FC<NFTLoaderProps> = ({
     if(nft.image.includes('ipfs.dweb.link')){
       // We need to transform https://xxx.ipfs.dweb.link to https://ipfs.io/ipfs/xxx
       const id = nft.image.split('//').pop().split('.')[0];
-      const _image = `https://ipfs.io/ipfs/${id}?ext=png`;
+      const _image = `https://ipfs.io/ipfs/${id}?ext=jpg`;
       setImage(_image);
     } else {
       setImage(nft.image)
@@ -55,10 +55,10 @@ const NFTLoader: FC<NFTLoaderProps> = ({
           {image && (
             <div className="flex">
               <Image
-                  quality={90}
+                  quality={80}
                   src={image}
-                  width={500}
-                  height={500}
+                  width={288}
+                  height={288}
                   alt={nft.name}
                   onLoadingComplete={() => setImageLoaded(true)}
               />
