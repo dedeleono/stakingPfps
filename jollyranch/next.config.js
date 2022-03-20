@@ -16,6 +16,12 @@ const withTM = require("next-transpile-modules")([
 /** @type {import('next').NextConfig} */
 module.exports = withTM({
   reactStrictMode: true,
+  images: {
+    domains: [
+      'ipfs.io',
+      'arweave.net',
+    ],
+  },
   webpack5: true,
   webpack: (config) => {
     /** Fallbacks for some reason @project-serum/anchor imports all these stuff */

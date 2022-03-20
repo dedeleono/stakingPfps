@@ -3,7 +3,7 @@ import { programs } from "@metaplex/js";
 const {
   metadata: { Metadata },
 } = programs;
-import { fetchHashTable } from "../hooks/useHashTable";
+
 import { MintLayout, TOKEN_PROGRAM_ID, Token } from "@solana/spl-token";
 import { WalletContextState } from "@solana/wallet-adapter-react";
 import {
@@ -20,7 +20,7 @@ const SPL_ASSOCIATED_TOKEN_ACCOUNT_PROGRAM_ID = new web3.PublicKey(
   "ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL"
 );
 
-const TOKEN_METADATA_PROGRAM_ID = new web3.PublicKey(
+export const TOKEN_METADATA_PROGRAM_ID = new web3.PublicKey(
   "metaqbxxUerdq28cj1RbAWkYQm3ybzjb6a8bt518x1s"
 );
 
@@ -29,6 +29,17 @@ const CANDY_MACHINE = "candy_machine";
 export const CANDY_MACHINE_PROGRAM_ID = new web3.PublicKey(
   "cndyAnrLdpjq1Ssp1z8xxDsB8dxe7u4HL5Nxi2K5WXZ"
 );
+
+const legendaryMints = [
+  "EEYFoUeajjvxwK4aY4FFWmmmbg9N6GGVHAy81UiunJ8M",
+  "9wDuK64jQUMQaWcPiwHkjo8ekZb4aqpb7uHAF63vZsz3",
+  "diSrrtYeAf4W6UYJhA4SkBT3e2sRAMpqiXzK1EJdFRt",
+  "9GX22m7ErUuhif5qjZ2mjrMMJ17TtuhYjt8fT4NnESNo",
+  "G6P57GZbBxgmL9XBxsbT4pQ5J1Pv5bNYTqQLVkExco25",
+];
+
+const redemptionRate = 4.2;
+const redemptionRateLegendary = 10;
 
 const getTokenWallet = async function (wallet: PublicKey, mint: PublicKey) {
   return (
@@ -398,6 +409,15 @@ export const awaitTransactionSignatureConfirmation = async (
   return status;
 };
 
+export function getNftDataRedemptionRate(metadata : {data : {mint: any}}) {
+  let _redemptionRate = redemptionRate;
+  if (legendaryMints.includes(metadata.data.mint.toString())) {
+    _redemptionRate = redemptionRateLegendary;
+  }
+
+  return _redemptionRate;
+}
+
 export async function getNftsForOwner(
   connection: web3.Connection,
   ownerAddress: web3.PublicKey
@@ -457,6 +477,7 @@ export async function getNftsForOwner(
         ...data,
         id: Number(data.name.replace(/^\D+/g, "").split(" - ")[0]),
         mint: metadata.data.mint,
+        redemption_rate: getNftDataRedemptionRate(metadata),
       };
 
       allTokens.push({ ...entireData });

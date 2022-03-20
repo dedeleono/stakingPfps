@@ -62,6 +62,9 @@ const Navigation: FC<NavigationProps>  = ({activeId}) => {
                 <a href="https://twitter.com/SeaShantiesSol" target="_blank" rel="noopener noreferrer">
                     <img src="/images/twitter.svg" className="w-4 md:w-6 m-1 md:m-2" />
                 </a>
+                <a href="https://magiceden.io/creators/sea_shanties" target="_blank" rel="noopener noreferrer">
+                    <img src="/images/me.svg" className="w-4 md:w-7 m-1 md:m-2" />
+                </a>
                 <WalletMultiButtonStyled className="!btn-xs !w-[130px] ml-2 md:!btn-md md:!w-[170px]" />
             </div>
         </div>

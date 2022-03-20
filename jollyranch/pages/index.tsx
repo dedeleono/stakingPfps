@@ -28,7 +28,6 @@ export default function Home() {
   const redeemNFT = usePfpStore(state => state.redeemNFT);
   const stakingRewards = usePfpStore(state => state.stakingRewards);
   const pfpState = usePfpStore(state => state.pfpState);
-
   const wallet = useWallet();
   const [nfts, setNfts] = useState([]);
   const [loadingNfts, setLoadingNfts] = useState(true);
@@ -91,7 +90,7 @@ export default function Home() {
         setLoadingNfts(false);
       })();
     } else {
-      console.log("reset pfpState");
+      // console.log("reset pfpState");
       resetStakedMints();
       resetStakedNFTs();
       setNfts([]);
@@ -230,9 +229,9 @@ export default function Home() {
                     </div>
                 )}
               </div>
-              <div className="card bg-info bg-opacity-10 mb-8 backdrop-blur-sm">
+              <div className="card bg-info bg-opacity-10 mb-8 md:backdrop-blur-sm">
                 {/* begin app windows */}
-                <div className="flex justify-center px-2 py-4">
+                <div className="flex flex-col justify-center px-2 py-4">
                   {loadingStakes && wallet.connected && (
                     <h1
                       className="text-lg font-400 animate-pulse"
@@ -283,11 +282,11 @@ export default function Home() {
                             </button>
                           </div>
                       )}
-                      {stakedMints.map((nft:any, i) => {
+                      {stakedMints.map((nft:any) => {
                         // console.log("mint nft", nft);
                         return (
                           <NFTLoader
-                            key={i}
+                            key={nft.name}
                             isStaked={true}
                             nft={nft}
                             stakingRewards={stakingRewards}
@@ -325,7 +324,7 @@ export default function Home() {
               </div>
               {wallet.connected && (
                   <div className="border mockup-window border-base-200 mb-8">
-                    <div className="flex justify-center px-2 py-4 border-t border-base-200">
+                    <div className="flex flex-col justify-center px-2 py-4 border-t border-base-200">
                       <div>
                         {loadingNfts && wallet.connected && (
                             <h1
@@ -367,7 +366,7 @@ export default function Home() {
                         {nfts.map((nft) => {
                           return (
                               <NFTLoader
-                                  key={nft.id}
+                                  key={nft.name}
                                   isStaked={false}
                                   nft={nft}
                                   onStake={async () => {

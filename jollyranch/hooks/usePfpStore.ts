@@ -12,19 +12,11 @@ import {
 import { getTrtnToken } from "../utils/token";
 import axios from "axios";
 import { programs } from "@metaplex/js";
+import {getNftDataRedemptionRate, TOKEN_METADATA_PROGRAM_ID} from "../lib/mint-one-token";
 
 const {
   metadata: { Metadata },
 } = programs;
-
-const legendaryMints = [
-  "9Gd3CpPFgK5PbfRnEuhF2JmDSUFEyWkHPkB7GA4SfSdA",
-  "APA8t9faSRNdZvB1opJvB5DQ8h3aeCFyNxZiaCMSArTZ",
-  "FrLGhta8fHTcyFTqiTDUwiDiG59L5xnvnqJwS2ssVXu7",
-  "662zoahSfHgZYjQ9bzcS8MzqRfsF2H1h549uZUebC4e6",
-  "Fs9SpcHN8J7PN8gjmp7Xvhae8EA4Zwifa79eNCQHJNgW",
-  "4j99GW37LGL1Er7otAsqRdWgNDt9srZguim9n4rFCoDj",
-];
 
 type PfpState = {
   program: any;
@@ -218,10 +210,6 @@ const usePfpStore = create<UsePfpStore>((set: any, get: any) => ({
     const _pfpState = get().pfpState;
     // console.log("nftPubKey", nftPubKey);
     const tokenAccount = new anchor.web3.PublicKey(nftPubKey);
-    //TODO check if this is program id is ok
-    const TOKEN_METADATA_PROGRAM_ID = new anchor.web3.PublicKey(
-      "metaqbxxUerdq28cj1RbAWkYQm3ybzjb6a8bt518x1s"
-    );
     const [pda] = await anchor.web3.PublicKey.findProgramAddress(
       [
         Buffer.from("metadata"),
@@ -239,6 +227,8 @@ const usePfpStore = create<UsePfpStore>((set: any, get: any) => ({
       accountInfo.value
     );
     const { data }: any = await axios.get(metadata.data.data.uri);
+    data["redemption_rate"] = getNftDataRedemptionRate(metadata);
+    data["mint"] = metadata.data.mint.toString();
     return data;
   },
   getStakedNfts: async () => {
@@ -324,11 +314,6 @@ const usePfpStore = create<UsePfpStore>((set: any, get: any) => ({
     // console.log("allStakedMints", allStakedMints);
     allStakedMints.map((nft) => {
       if (nft) {
-        let redemption_rate = 4.2;
-        // console.log("nft", nft.nft_account.account.mint.toString());
-        if (legendaryMints.includes(nft.nft_account.account.mint.toString())) {
-          redemption_rate = 10;
-        }
         const currDate = new Date().getTime() / 1000;
         const daysElapsed =
           Math.abs(currDate - nft.nft_account.account.startDate) /
@@ -339,13 +324,21 @@ const usePfpStore = create<UsePfpStore>((set: any, get: any) => ({
         //   "amountRedeemed",
         //   nft.nft_account.account.amountRedeemed.toNumber() / 1e6
         // );
-        const estimateRewards = redemption_rate * daysElapsed - amountRedeemed;
+        const estimateRewards = nft.redemption_rate * daysElapsed - amountRedeemed;
         _stakingRewards[nft.nft_account.id.toString()] = estimateRewards;
       }
-    });
+    })
     set({
       stakingRewards: { ..._stakingRewards },
-      stakedMints: allStakedMints.filter((e) => e),
+      stakedMints: allStakedMints.sort(function (a: any, b: any) {
+        if (a.name < b.name) {
+          return -1;
+        }
+        if (a.name > b.name) {
+          return 1;
+        }
+        return 0;
+      }),
     });
   },
   redeemRewards: async (nftPubKey: PublicKey) => {
