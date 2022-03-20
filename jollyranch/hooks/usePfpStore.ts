@@ -361,10 +361,11 @@ const usePfpStore = create<UsePfpStore>((set: any, get: any) => ({
   redeemAllRewards: async (redeemAllChunk: number) => {
     const _pfpState = get().pfpState;
     const _stakedMints = get().stakedMints;
-    const tx = new anchor.web3.Transaction();
+    let tx;
     // Chunked request to prevent transaction to large error (1232 bytes)
     let i, j, stakedMintsChunked;
     for (i = 0, j = _stakedMints.length; i < j; i += redeemAllChunk) {
+      tx = new anchor.web3.Transaction();
       stakedMintsChunked = _stakedMints.slice(i, i + redeemAllChunk);
       // do whatever
       for (let k = 0; k < stakedMintsChunked.length; k++) {
