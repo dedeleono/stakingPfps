@@ -207,6 +207,26 @@ export default function Home() {
                         transactions will be prompted
                       </span>
                     )}
+                    {!wallet.publicKey && (
+                        <div
+                            className="btn btn-primary z-50"
+                            style={{ color: "#fff" }}
+                        >
+                        <WalletMultiButton
+                            style={{
+                              all: "unset",
+                              height: "100%",
+                              width: "100%",
+                              zIndex: "10",
+                              display: "flex",
+                              justifyContent: "center",
+                              alignItems: "center",
+                              fontFamily: "Montserrat",
+                              fontSize: "0.8rem",
+                            }}
+                        />
+                        </div>
+                    )}
                   </div>
                 </div>
               </div>
