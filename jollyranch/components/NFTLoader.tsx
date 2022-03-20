@@ -119,12 +119,12 @@ const NFTLoader: FC<NFTLoaderProps> = ({
                       : "Loading..."}
                 </p>
               </div>
-              <div className="grid grid-cols-2 w-full">
+              <div className="grid grid-cols-2 w-full my-2">
                 <div>
                   <div className="opacity-60 text-sm">
                     Date staked
                   </div>
-                  <div className="text-sm">
+                  <div className="text-[0.8rem]">
                     {new Date(
                         nft.nft_account.account.startDate * 1000
                     ).toLocaleDateString("en-US", {
@@ -140,20 +140,20 @@ const NFTLoader: FC<NFTLoaderProps> = ({
                   <div className="opacity-60 text-sm">
                     Daily Rewards
                   </div>
-                  <div className="text-sm">
+                  <div className="text-[0.8rem]">
                     {nft.redemption_rate}{' '}$TRTN
                   </div>
                 </div>
               </div>
               <div className="justify-center card-actions">
                 <button
-                    className="btn rounded-full btn-sm btn-secondary"
+                    className="btn rounded-md btn-sm btn-secondary font-[Jangkuy] text-[0.8rem]"
                     onClick={onRedeem}
                 >
                   redeem
                 </button>
                 <button
-                    className="btn rounded-full btn-sm btn-accent"
+                    className="btn rounded-md btn-sm btn-accent font-[Jangkuy] text-[0.8rem]"
                     onClick={unStake}
                 >
                   unstake

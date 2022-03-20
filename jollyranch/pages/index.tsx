@@ -180,7 +180,8 @@ export default function Home() {
                             className="stat-title text-white"
                             style={{ fontFamily: "Montserrat" }}
                           >
-                            {((totalRatsStaked/6666)*100).toFixed(2)}% Citizen Staked
+                            {((totalRatsStaked / 6666) * 100).toFixed(2)}%
+                            Citizen Staked
                           </div>
                         </div>
                       </div>
@@ -188,38 +189,50 @@ export default function Home() {
                   </div>
                 </div>
                 <div className="navbar-end">
-                  <div
-                    className="btn btn-primary z-50 mr-4"
-                    style={{ color: "#fff" }}
-                  >
-                    <WalletMultiButton
-                      style={{
-                        all: "unset",
-                        height: "100%",
-                        width: "100%",
-                        zIndex: "10",
-                        display: "flex",
-                        justifyContent: "center",
-                        alignItems: "center",
-                        fontFamily: "Montserrat",
-                        fontSize: "0.8rem",
-                      }}
-                    />
+                  <div className="mr-4 justify-center align-center">
+                    {stakedMints.length > 1 && (
+                      <button
+                        className="btn h-full btn-secondary mt-4 font-jangkuy"
+                        onClick={async () => {
+                          await redeemAllRewards(redeemAllChunk);
+                          await refresh();
+                        }}
+                      >
+                        Redeem All
+                      </button>
+                    )}
+                    {stakedMints.length > redeemAllChunk && (
+                      <span className="text-[0.8rem] font-[Montserrat] font-sans leading-normal mt-2 block opacity-50">
+                        {Math.ceil(stakedMints.length / redeemAllChunk)}{" "}
+                        transactions will be prompted
+                      </span>
+                    )}
                   </div>
                 </div>
               </div>
               <div>
-                {(pfpState["program"] && wallet.connected && wallet.publicKey && !loadingStakes && !loadingNfts && nfts.length === 0 && stakedMints.length === 0) && (
+                {pfpState["program"] &&
+                  wallet.connected &&
+                  wallet.publicKey &&
+                  !loadingStakes &&
+                  !loadingNfts &&
+                  nfts.length === 0 &&
+                  stakedMints.length === 0 && (
                     <div>
                       <div className="w-full flex justify-center justify-items-center text-center">
                         <div className="max-w-md">
-                          <h1 className="text-4xl font-bold" style={{ fontFamily: "Jangkuy" }}>You don&apos;t have any Citizens 😥</h1>
+                          <h1
+                            className="text-4xl font-bold"
+                            style={{ fontFamily: "Jangkuy" }}
+                          >
+                            You don&apos;t have any Citizens 😥
+                          </h1>
                           <div className="mt-5 mb-8">
                             <a
-                                href="https://magiceden.io/marketplace/sea_shanties_citizens"
-                                rel="noreferrer noopener"
-                                target="_blank"
-                                className="btn btn-lg btn-secondary"
+                              href="https://magiceden.io/marketplace/sea_shanties_citizens"
+                              rel="noreferrer noopener"
+                              target="_blank"
+                              className="btn btn-lg btn-secondary"
                             >
                               Buy on Magic Eden
                             </a>
@@ -227,7 +240,7 @@ export default function Home() {
                         </div>
                       </div>
                     </div>
-                )}
+                  )}
               </div>
               <div className="card bg-info bg-opacity-10 mb-8 md:backdrop-blur-sm">
                 {/* begin app windows */}
@@ -257,32 +270,35 @@ export default function Home() {
                   )}
                   {stakedMints.length > 0 && !loadingStakes && (
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-                      {stakedMints.length > 1 && (
-                          <div
-                              className="card w-72 m-4 card-bordered card-compact shadow-2xl bg-primary-content text"
+                      {/**                      {stakedMints.length > 1 && (
+                        <div className="card w-72 m-4 card-bordered card-compact shadow-2xl bg-primary-content text">
+                          <button
+                            className="btn h-full btn-secondary font-jangkuy"
+                            onClick={async () => {
+                              await redeemAllRewards(redeemAllChunk);
+                              await refresh();
+                            }}
                           >
-                            <button
-                                className="btn h-full btn-secondary font-jangkuy"
-                                onClick={async () => {
-                                  await redeemAllRewards(redeemAllChunk);
-                                  await refresh();
-                                }}
-                            >
-                          <span className="flex p-4 flex-col items-center">
-                            <span className="block text-lg pb-2">Redeem all</span>
-                            <span className="block w-1/2">
-                              <img src="/images/trtn.png"/>
-                            </span>
-                            {(stakedMints.length > redeemAllChunk) && (
+                            <span className="flex p-4 flex-col items-center">
+                              <span className="block text-lg pb-2">
+                                Redeem all
+                              </span>
+                              <span className="block w-1/2">
+                                <img src="/images/trtn.png" />
+                              </span>
+                              {stakedMints.length > redeemAllChunk && (
                                 <span className="font-normal font-sans leading-normal mt-2 opacity-50">
-                                    {Math.ceil(stakedMints.length / redeemAllChunk)} transactions will be prompted
+                                  {Math.ceil(
+                                    stakedMints.length / redeemAllChunk
+                                  )}{" "}
+                                  transactions will be prompted
                                 </span>
-                            )}
-                          </span>
-                            </button>
-                          </div>
-                      )}
-                      {stakedMints.map((nft:any) => {
+                              )}
+                            </span>
+                          </button>
+                        </div>
+                      )} */}
+                      {stakedMints.map((nft: any) => {
                         // console.log("mint nft", nft);
                         return (
                           <NFTLoader
@@ -323,68 +339,68 @@ export default function Home() {
                 </div>
               </div>
               {wallet.connected && (
-                  <div className="border mockup-window border-base-200 mb-8">
-                    <div className="flex flex-col justify-center px-2 py-4 border-t border-base-200">
-                      <div>
-                        {loadingNfts && wallet.connected && (
-                            <h1
-                                className="text-lg font-bold animate-pulse"
-                                style={{
-                                  fontFamily: "Scratchy",
-                                  fontSize: "2.5rem",
-                                  color: "#D5D3D2",
-                                }}
-                            >
-                              Loading your NFT&apos;s, please wait...
-                            </h1>
-                        )}
-                        {!wallet.connected && (
-                            <p
-                                style={{
-                                  fontFamily: "Scratchy",
-                                  fontSize: "2.5rem",
-                                  color: "#D5D3D2",
-                                }}
-                            >
-                              Please connect your wallet above
-                            </p>
-                        )}
-                        {!loadingNfts && wallet.connected && nfts.length === 0 && (
-                            <h1
-                                className="text-lg font-400"
-                                style={{
-                                  fontFamily: "Scratchy",
-                                  fontSize: "2.5rem",
-                                  color: "#D5D3D2",
-                                }}
-                            >
-                              You don&apos;t have any Citizens in your wallet
-                            </h1>
-                        )}
-                      </div>
-                      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-                        {nfts.map((nft) => {
-                          return (
-                              <NFTLoader
-                                  key={nft.name}
-                                  isStaked={false}
-                                  nft={nft}
-                                  onStake={async () => {
-                                    // console.log(
-                                    //   "mint, cheese, lockup: ",
-                                    //   nft.mint,
-                                    //   cheese,
-                                    //   lockup
-                                    // );
-                                    await stakeNFT(nft.mint);
-                                    await refresh();
-                                  }}
-                              />
-                          );
-                        })}
-                      </div>
+                <div className="border mockup-window border-base-200 mb-8">
+                  <div className="flex flex-col justify-center px-2 py-4 border-t border-base-200">
+                    <div>
+                      {loadingNfts && wallet.connected && (
+                        <h1
+                          className="text-lg font-bold animate-pulse"
+                          style={{
+                            fontFamily: "Scratchy",
+                            fontSize: "2.5rem",
+                            color: "#D5D3D2",
+                          }}
+                        >
+                          Loading your NFT&apos;s, please wait...
+                        </h1>
+                      )}
+                      {!wallet.connected && (
+                        <p
+                          style={{
+                            fontFamily: "Scratchy",
+                            fontSize: "2.5rem",
+                            color: "#D5D3D2",
+                          }}
+                        >
+                          Please connect your wallet above
+                        </p>
+                      )}
+                      {!loadingNfts && wallet.connected && nfts.length === 0 && (
+                        <h1
+                          className="text-lg font-400"
+                          style={{
+                            fontFamily: "Scratchy",
+                            fontSize: "2.5rem",
+                            color: "#D5D3D2",
+                          }}
+                        >
+                          You don&apos;t have any Citizens in your wallet
+                        </h1>
+                      )}
+                    </div>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+                      {nfts.map((nft) => {
+                        return (
+                          <NFTLoader
+                            key={nft.name}
+                            isStaked={false}
+                            nft={nft}
+                            onStake={async () => {
+                              // console.log(
+                              //   "mint, cheese, lockup: ",
+                              //   nft.mint,
+                              //   cheese,
+                              //   lockup
+                              // );
+                              await stakeNFT(nft.mint);
+                              await refresh();
+                            }}
+                          />
+                        );
+                      })}
                     </div>
                   </div>
+                </div>
               )}
               {/* end app windows */}
             </div>
