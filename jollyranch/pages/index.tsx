@@ -262,6 +262,18 @@ export default function Home() {
                     </div>
                   )}
               </div>
+              {stakedMints.length > 0 && !loadingStakes && (
+                  <div className="card gap-4 bg-neutral bg-opacity-60 mb-4 md:backdrop-blur-sm flex flex-row text-left p-8 justify-center items-center">
+                    <div>
+                      <div className="font-bold pb-2">COMING SOON…</div>
+                      <h2 className="font-jangkuy text-2xl  md:text-4xl">Get ready for<br/>The first empire</h2>
+                      <div className="font-bold opacity-50 max-w-3xl">Hire gang members using $TRTN to send them into the wastes of Old Atlantis to acquire items. Items will be used to burn 2 citizens to mint a gen 2 citizen.</div>
+                    </div>
+                    <div className="w-1/2 flex text-center hidden lg:block">
+                      <img className="max-w-sm inline" src="/images/logo-atlantis.png" />
+                    </div>
+                  </div>
+              )}
               <div className="card bg-info bg-opacity-10 mb-8 md:backdrop-blur-sm">
                 {/* begin app windows */}
                 <div className="flex flex-col justify-center px-2 py-4">
