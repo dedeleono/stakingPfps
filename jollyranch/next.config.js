@@ -18,7 +18,7 @@ module.exports = withTM({
   reactStrictMode: true,
   images: {
     domains: [
-      'ipfs.io',
+      'infura-ipfs.io',
       'arweave.net',
     ],
   },

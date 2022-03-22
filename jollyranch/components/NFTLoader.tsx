@@ -34,9 +34,10 @@ const NFTLoader: FC<NFTLoaderProps> = ({
   const [showAttributes, setShowAttributes] = useState(false);
   useEffect(() => {
     if(nft.image.includes('ipfs.dweb.link')){
-      // We need to transform https://xxx.ipfs.dweb.link to https://ipfs.io/ipfs/xxx
+      // We need to transform https://xxx.ipfs.dweb.link to https://infura-ipfs.io/ipfs/xxx
+      // nextjs does not allow whitelisting subdomains so we need to fetch images from 1 root domain
       const id = nft.image.split('//').pop().split('.')[0];
-      const _image = `https://ipfs.io/ipfs/${id}?ext=jpg`;
+      const _image = `https://infura-ipfs.io/ipfs/${id}?ext=jpg`;
       setImageUrl(_image);
     } else {
       setImageUrl(nft.image)
