@@ -202,7 +202,7 @@ export default function Home() {
                       </button>
                     )}
                     {stakedMints.length > redeemAllChunk && (
-                      <span className="text-[0.8rem] font-[Montserrat] font-sans leading-normal mt-2 block opacity-50">
+                      <span className="text-[0.8rem] font-[Montserrat] leading-normal mt-2 block opacity-50">
                         {Math.ceil(stakedMints.length / redeemAllChunk)}{" "}
                         transactions will be prompted
                       </span>
@@ -265,11 +265,11 @@ export default function Home() {
               {stakedMints.length > 0 && !loadingStakes && (
                   <div className="card gap-4 bg-neutral bg-opacity-60 mb-4 md:backdrop-blur-sm flex flex-row text-left p-8 justify-center items-center">
                     <div>
-                      <div className="font-bold pb-2">COMING SOON…</div>
-                      <h2 className="font-jangkuy text-2xl  md:text-4xl">Get ready for<br/>The first empire</h2>
-                      <div className="font-bold opacity-50 max-w-3xl">Hire gang members using $TRTN to send them into the wastes of Old Atlantis to acquire items. Items will be used to burn 2 citizens to mint a gen 2 citizen.</div>
+                      <div className="font-bold pb-2 font-[Scratchy] text-2xl text-[#feff04]">COMING SOON…</div>
+                      <h2 className="font-jangkuy text-2xl  md:text-4xl py-2">Get ready for<br/>The first empire</h2>
+                      <div className="font-bold opacity-50 max-w-3xl font-[Montserrat]">Hire gang members using $TRTN to send them into the wastes of Old Atlantis to acquire items. Items will be used to burn 2 citizens to mint a gen 2 citizen.</div>
                     </div>
-                    <div className="w-1/2 flex text-center hidden lg:block">
+                    <div className="w-1/2 md:flex text-center hidden lg:block">
                       <img className="max-w-sm inline" src="/images/logo-atlantis.png" />
                     </div>
                   </div>
