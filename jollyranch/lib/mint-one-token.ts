@@ -467,7 +467,9 @@ export async function getNftsForOwner(
         ownerAddress.toString(),
         accountInfo.value
       );
-      const { data }: any = await axios.get(metadata.data.data.uri);
+      // dweb.link gives CORS and SSL issues for some users
+      const uri = metadata.data.data.uri.replace("dweb.link", "infura-ipfs.io")
+      const { data }: any = await axios.get(uri);
       // console.log("got nft metadata");
       // console.log("accountInfo.value", accountInfo.value);
       // console.log("metadata", metadata);

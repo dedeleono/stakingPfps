@@ -226,7 +226,9 @@ const usePfpStore = create<UsePfpStore>((set: any, get: any) => ({
       _pfpState.program.provider.wallet.publicKey.toString(),
       accountInfo.value
     );
-    const { data }: any = await axios.get(metadata.data.data.uri);
+    // dweb.link gives CORS and SSL issues for some users
+    const uri = metadata.data.data.uri.replace("dweb.link", "infura-ipfs.io");
+    const { data }: any = await axios.get(uri);
     data["redemption_rate"] = getNftDataRedemptionRate(metadata);
     data["mint"] = metadata.data.mint.toString();
     return data;

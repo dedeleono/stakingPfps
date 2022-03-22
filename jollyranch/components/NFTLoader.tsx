@@ -29,7 +29,7 @@ const NFTLoader: FC<NFTLoaderProps> = ({
   unStake,
   stakingRewards,
 }) => {
-  const [image, setImage] = useState('');
+  const [imageUrl, setImageUrl] = useState('');
   const [imageLoaded, setImageLoaded] = useState(false);
   const [showAttributes, setShowAttributes] = useState(false);
   useEffect(() => {
@@ -37,11 +37,13 @@ const NFTLoader: FC<NFTLoaderProps> = ({
       // We need to transform https://xxx.ipfs.dweb.link to https://ipfs.io/ipfs/xxx
       const id = nft.image.split('//').pop().split('.')[0];
       const _image = `https://ipfs.io/ipfs/${id}?ext=jpg`;
-      setImage(_image);
+      setImageUrl(_image);
     } else {
-      setImage(nft.image)
+      setImageUrl(nft.image)
     }
   }, [nft.image]);
+  // dweb.link gives CORS and SSL issues for some users
+  const imageDownLoadUrl = nft.image.replace("dweb.link", "infura-ipfs.io");
 
     return (
       <div
@@ -52,18 +54,18 @@ const NFTLoader: FC<NFTLoaderProps> = ({
               <div className="animate-pulse card flex justify-center items-center card-compact bg-slate-800 absolute top-0 left-0 right-0 bottom-0 !w-auto rounded-b-none" >
                 <div className="btn loading btn-circle btn-lg btn-ghost" />
               </div>)}
-          {image && (
+          {imageUrl && (
             <div className="flex">
               <Image
                   quality={80}
-                  src={image}
+                  src={imageUrl}
                   width={288}
                   height={288}
                   alt={nft.name}
                   onLoadingComplete={() => setImageLoaded(true)}
               />
               <a
-                  href={nft.image}
+                  href={imageDownLoadUrl}
                   rel="noopener noreferrer"
                   target="_blank"
                   className="absolute top-3 right-10 transition-opacity duration-150 opacity-30 md:opacity-0 group-hover:opacity-30"
