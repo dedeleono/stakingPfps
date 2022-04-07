@@ -18,6 +18,11 @@ const navigationItems = [
         href: "https://citizens.shill-city.com/"
     },
     {
+        id: "old-atlantis",
+        title: "Old Atlantis",
+        href: "https://game.shill-city.com/",
+    },
+    {
         id: "poseidon-lp",
         title: "Poseidon LP",
         href: "https://lp.shill-city.com/"
