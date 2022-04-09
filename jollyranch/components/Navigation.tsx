@@ -9,7 +9,7 @@ const navigationItems = [
     },
     {
         id: "pet-palace",
-        title: "Pet Palace",
+        title: "Pets",
         href: "https://pets.shill-city.com/"
     },
     {
