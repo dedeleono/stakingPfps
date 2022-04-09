@@ -265,9 +265,9 @@ export default function Home() {
               {stakedMints.length > 0 && !loadingStakes && (
                   <div className="card gap-4 bg-neutral bg-opacity-60 mb-4 md:backdrop-blur-sm flex flex-row text-left p-8 justify-center items-center">
                     <div>
-                      <div className="font-bold pb-2 font-[Scratchy] text-2xl text-[#feff04]">COMING SOON…</div>
-                      <h2 className="font-jangkuy text-2xl  md:text-4xl py-2">Get ready for<br/>The first empire</h2>
-                      <div className="font-bold opacity-50 max-w-3xl font-[Montserrat]">Hire gang members using $TRTN to send them into the wastes of Old Atlantis to acquire items. Items will be used to burn 2 citizens to mint a gen 2 citizen.</div>
+                      <h2 className="font-jangkuy text-2xl  md:text-4xl py-2">The first empire:<br/>Old Atlantis<span className="text-yellow"> is LIVE!</span></h2>
+                      <div className="font-bold opacity-50 max-w-3xl font-[Montserrat]">Recruit war parties and send them to get TRTN, common, rare and legendary items. These are needed to get the Gen 2 citizens. Items are NFTs that can be traded or sold on secondary markets.</div>
+                      <a href="https://game.shill-city.com/" className="btn mt-3">Recruit now</a>
                     </div>
                     <div className="w-1/2 md:flex text-center hidden lg:block">
                       <img className="max-w-sm inline" src="/images/logo-atlantis.png" />
