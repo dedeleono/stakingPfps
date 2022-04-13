@@ -1,4 +1,4 @@
-export type NftStaker = {
+{
   "version": "0.1.0",
   "name": "nft_staker",
   "instructions": [
@@ -107,11 +107,6 @@ export type NftStaker = {
           "isSigner": true
         },
         {
-          "name": "jollyranch",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
           "name": "senderSplAccount",
           "isMut": true,
           "isSigner": false
@@ -145,14 +140,6 @@ export type NftStaker = {
       "args": [
         {
           "name": "splBump",
-          "type": "u8"
-        },
-        {
-          "name": "lockup",
-          "type": "u8"
-        },
-        {
-          "name": "rarity",
           "type": "u8"
         }
       ]
@@ -186,12 +173,27 @@ export type NftStaker = {
           "isSigner": false
         },
         {
+          "name": "mint",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
           "name": "tokenProgram",
           "isMut": false,
           "isSigner": false
         },
         {
+          "name": "associatedTokenProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
           "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "rent",
           "isMut": false,
           "isSigner": false
         }
@@ -208,7 +210,7 @@ export type NftStaker = {
         },
         {
           "name": "jollyranch",
-          "isMut": false,
+          "isMut": true,
           "isSigner": false
         },
         {
@@ -227,184 +229,79 @@ export type NftStaker = {
           "isSigner": false
         },
         {
+          "name": "senderTritonAccount",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "recieverTritonAccount",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "mint",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "nft",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
           "name": "tokenProgram",
           "isMut": false,
           "isSigner": false
         },
         {
+          "name": "associatedTokenProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
           "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "rent",
           "isMut": false,
           "isSigner": false
         }
       ],
       "args": []
-    }
-  ],
-  "accounts": [
-    {
-      "name": "jollyRanch",
-      "type": {
-        "kind": "struct",
-        "fields": [
-          {
-            "name": "authority",
-            "type": "publicKey"
-          },
-          {
-            "name": "splBump",
-            "type": "u8"
-          },
-          {
-            "name": "amount",
-            "type": "u64"
-          },
-          {
-            "name": "amountRedeemed",
-            "type": "u64"
-          },
-          {
-            "name": "bump",
-            "type": "u8"
-          }
-        ]
-      }
     },
     {
-      "name": "stake",
-      "type": {
-        "kind": "struct",
-        "fields": [
-          {
-            "name": "authority",
-            "type": "publicKey"
-          },
-          {
-            "name": "splBump",
-            "type": "u8"
-          },
-          {
-            "name": "startDate",
-            "type": "i64"
-          },
-          {
-            "name": "endDate",
-            "type": "i64"
-          },
-          {
-            "name": "amountRedeemed",
-            "type": "u64"
-          },
-          {
-            "name": "amountOwed",
-            "type": "u64"
-          },
-          {
-            "name": "withdrawn",
-            "type": "bool"
-          }
-        ]
-      }
-    }
-  ],
-  "errors": [
-    {
-      "code": 6000,
-      "name": "InvalidNftTime",
-      "msg": "NFT can't be unlocked yet, not enough time has passed."
-    },
-    {
-      "code": 6001,
-      "name": "InvalidNftWithdrawl",
-      "msg": "NFT has already been un-staked"
-    },
-    {
-      "code": 6002,
-      "name": "InvalidLockupPeriod",
-      "msg": "Lockup period invalid"
-    },
-    {
-      "code": 6003,
-      "name": "InvalidRarity",
-      "msg": "Rarity invalid"
-    }
-  ]
-};
-
-export const IDL: NftStaker = {
-  "version": "0.1.0",
-  "name": "nft_staker",
-  "instructions": [
-    {
-      "name": "initialize",
+      "name": "oldAtlantis",
       "accounts": [
-        {
-          "name": "jollyranch",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "authority",
-          "isMut": true,
-          "isSigner": true
-        },
-        {
-          "name": "recieverSplAccount",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "mint",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "systemProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "tokenProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "rent",
-          "isMut": false,
-          "isSigner": false
-        }
-      ],
-      "args": [
-        {
-          "name": "jollyBump",
-          "type": "u8"
-        },
-        {
-          "name": "splBump",
-          "type": "u8"
-        }
-      ]
-    },
-    {
-      "name": "fundRanch",
-      "accounts": [
-        {
-          "name": "jollyranch",
-          "isMut": true,
-          "isSigner": false
-        },
         {
           "name": "authority",
           "isMut": false,
           "isSigner": true
         },
         {
-          "name": "senderSplAccount",
+          "name": "gang",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "jollyranch",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "trtnAccount",
           "isMut": true,
           "isSigner": false
         },
         {
-          "name": "recieverSplAccount",
+          "name": "authTrtnAccount",
           "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "slotHashes",
+          "isMut": false,
           "isSigner": false
         },
         {
@@ -420,28 +317,56 @@ export const IDL: NftStaker = {
       ],
       "args": [
         {
-          "name": "amount",
-          "type": "u64"
+          "name": "blessing",
+          "type": "bool"
+        },
+        {
+          "name": "member",
+          "type": {
+            "defined": "Member"
+          }
+        },
+        {
+          "name": "leader",
+          "type": {
+            "defined": "Leader"
+          }
         }
       ]
     },
     {
-      "name": "stakeNft",
+      "name": "oracle",
       "accounts": [
         {
           "name": "authority",
-          "isMut": true,
+          "isMut": false,
           "isSigner": true
         },
         {
-          "name": "stake",
-          "isMut": true,
-          "isSigner": true
-        },
-        {
-          "name": "jollyranch",
+          "name": "gang",
           "isMut": true,
           "isSigner": false
+        }
+      ],
+      "args": [
+        {
+          "name": "seed",
+          "type": "u32"
+        }
+      ]
+    },
+    {
+      "name": "fundPet",
+      "accounts": [
+        {
+          "name": "authority",
+          "isMut": false,
+          "isSigner": true
+        },
+        {
+          "name": "pet",
+          "isMut": true,
+          "isSigner": true
         },
         {
           "name": "senderSplAccount",
@@ -476,36 +401,58 @@ export const IDL: NftStaker = {
       ],
       "args": [
         {
-          "name": "splBump",
-          "type": "u8"
-        },
-        {
-          "name": "lockup",
+          "name": "petBump",
           "type": "u8"
         },
         {
           "name": "rarity",
           "type": "u8"
+        },
+        {
+          "name": "prize",
+          "type": {
+            "defined": "Prize"
+          }
         }
       ]
     },
     {
-      "name": "redeemRewards",
+      "name": "redeemPet",
       "accounts": [
         {
-          "name": "stake",
+          "name": "authority",
+          "isMut": false,
+          "isSigner": true
+        },
+        {
+          "name": "gang",
           "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "prize",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "prizeNftAccount",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "recieverNftAccount",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "nft",
+          "isMut": false,
           "isSigner": false
         },
         {
           "name": "jollyranch",
           "isMut": true,
           "isSigner": false
-        },
-        {
-          "name": "authority",
-          "isMut": false,
-          "isSigner": true
         },
         {
           "name": "senderSplAccount",
@@ -518,12 +465,27 @@ export const IDL: NftStaker = {
           "isSigner": false
         },
         {
+          "name": "mint",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
           "name": "tokenProgram",
           "isMut": false,
           "isSigner": false
         },
         {
+          "name": "associatedTokenProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
           "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "rent",
           "isMut": false,
           "isSigner": false
         }
@@ -531,41 +493,16 @@ export const IDL: NftStaker = {
       "args": []
     },
     {
-      "name": "redeemNft",
+      "name": "fixPet",
       "accounts": [
-        {
-          "name": "stake",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "jollyranch",
-          "isMut": false,
-          "isSigner": false
-        },
         {
           "name": "authority",
           "isMut": false,
           "isSigner": true
         },
         {
-          "name": "senderSplAccount",
+          "name": "pet",
           "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "recieverSplAccount",
-          "isMut": true,
-          "isSigner": false
-        },
-        {
-          "name": "tokenProgram",
-          "isMut": false,
-          "isSigner": false
-        },
-        {
-          "name": "systemProgram",
-          "isMut": false,
           "isSigner": false
         }
       ],
@@ -574,7 +511,111 @@ export const IDL: NftStaker = {
   ],
   "accounts": [
     {
-      "name": "jollyRanch",
+      "name": "Pet",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "authority",
+            "type": "publicKey"
+          },
+          {
+            "name": "mint",
+            "type": "publicKey"
+          },
+          {
+            "name": "bump",
+            "type": "u8"
+          },
+          {
+            "name": "withdrawn",
+            "type": "bool"
+          },
+          {
+            "name": "rarity",
+            "type": "u8"
+          },
+          {
+            "name": "prize",
+            "type": {
+              "defined": "Prize"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "Gang",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "authority",
+            "type": "publicKey"
+          },
+          {
+            "name": "id",
+            "type": "u64"
+          },
+          {
+            "name": "timestamp",
+            "type": "i64"
+          },
+          {
+            "name": "seed",
+            "type": "u64"
+          },
+          {
+            "name": "chanceCommon",
+            "type": "u32"
+          },
+          {
+            "name": "chanceRare",
+            "type": "u32"
+          },
+          {
+            "name": "chanceLegendary",
+            "type": "u32"
+          },
+          {
+            "name": "result",
+            "type": "u32"
+          },
+          {
+            "name": "withdrawn",
+            "type": "bool"
+          },
+          {
+            "name": "oracle",
+            "type": "bool"
+          },
+          {
+            "name": "blessing",
+            "type": "bool"
+          },
+          {
+            "name": "member",
+            "type": {
+              "defined": "Member"
+            }
+          },
+          {
+            "name": "leader",
+            "type": {
+              "defined": "Leader"
+            }
+          },
+          {
+            "name": "prize",
+            "type": {
+              "defined": "Prize"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "JollyRanch",
       "type": {
         "kind": "struct",
         "fields": [
@@ -602,12 +643,16 @@ export const IDL: NftStaker = {
       }
     },
     {
-      "name": "stake",
+      "name": "Stake",
       "type": {
         "kind": "struct",
         "fields": [
           {
             "name": "authority",
+            "type": "publicKey"
+          },
+          {
+            "name": "mint",
             "type": "publicKey"
           },
           {
@@ -638,26 +683,167 @@ export const IDL: NftStaker = {
       }
     }
   ],
+  "types": [
+    {
+      "name": "Member",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "associate",
+            "type": "u32"
+          },
+          {
+            "name": "soldier",
+            "type": "u32"
+          },
+          {
+            "name": "captain",
+            "type": "u32"
+          }
+        ]
+      }
+    },
+    {
+      "name": "Leader",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "shillCityBlinder",
+            "type": "bool"
+          },
+          {
+            "name": "aoShunTriad",
+            "type": "bool"
+          },
+          {
+            "name": "trenchTownMafia",
+            "type": "bool"
+          }
+        ]
+      }
+    },
+    {
+      "name": "Prize",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "smallBag",
+            "type": "bool"
+          },
+          {
+            "name": "largeBag",
+            "type": "bool"
+          },
+          {
+            "name": "treasureChest",
+            "type": "bool"
+          },
+          {
+            "name": "beastHeart",
+            "type": "bool"
+          },
+          {
+            "name": "poseidonCrystal",
+            "type": "bool"
+          },
+          {
+            "name": "godStone",
+            "type": "bool"
+          },
+          {
+            "name": "spellBook",
+            "type": "bool"
+          },
+          {
+            "name": "godSkinSpellBook",
+            "type": "bool"
+          },
+          {
+            "name": "godsBlessing",
+            "type": "bool"
+          }
+        ]
+      }
+    }
+  ],
+  "events": [
+    {
+      "name": "WarPartyRoll",
+      "fields": [
+        {
+          "name": "key",
+          "type": "publicKey",
+          "index": false
+        }
+      ]
+    }
+  ],
   "errors": [
     {
       "code": 6000,
-      "name": "InvalidNftTime",
-      "msg": "NFT can't be unlocked yet, not enough time has passed."
+      "name": "OutOfFunds",
+      "msg": "The staking contract is out of funds."
     },
     {
       "code": 6001,
-      "name": "InvalidNftWithdrawl",
-      "msg": "NFT has already been un-staked"
+      "name": "NotEnoughTriton",
+      "msg": "Not enough triton sent"
     },
     {
       "code": 6002,
-      "name": "InvalidLockupPeriod",
-      "msg": "Lockup period invalid"
+      "name": "TooMuchTriton",
+      "msg": "Too much triton sent"
     },
     {
       "code": 6003,
-      "name": "InvalidRarity",
-      "msg": "Rarity invalid"
+      "name": "FailedToParseItems",
+      "msg": "Ther was in issue parsing the party members."
+    },
+    {
+      "code": 6004,
+      "name": "IncorrectSlotHashesPubkey",
+      "msg": "Tried to lie about slothhashes program."
+    },
+    {
+      "code": 6005,
+      "name": "OnlyOracleCanUpdate",
+      "msg": "Only the oracle can update rolls."
+    },
+    {
+      "code": 6006,
+      "name": "OracleHasAlreadySpoken",
+      "msg": "The oracle already rolled."
+    },
+    {
+      "code": 6007,
+      "name": "PetAlreadyRedeemed",
+      "msg": "This pet was already redeemed."
+    },
+    {
+      "code": 6008,
+      "name": "BreedAlreadyWithdrawn",
+      "msg": "You already checked on this war party."
+    },
+    {
+      "code": 6009,
+      "name": "OracleHasNotSpoken",
+      "msg": "The oracle hasn't rolled your party yet."
+    },
+    {
+      "code": 6010,
+      "name": "SuppliedWrongItemRarity",
+      "msg": "You tried to redeem the wrong item type."
+    },
+    {
+      "code": 6011,
+      "name": "OnlyGodCanDoThis",
+      "msg": "Only God can do this."
     }
-  ]
-};
+  ],
+  "metadata": {
+    "address": "EdYp85RTTNJJAFCXuCPc1uoSJuchchxEXr9W39tmktFu"
+  }
+}

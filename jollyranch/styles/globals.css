@@ -40,3 +40,13 @@ a {
 .wallet-adapter-button .wallet-adapter-button-start-icon {
   margin-right: 5px;
 }
+
+
+@media (min-width: 768px) {
+  .Toastify__toast-container--top-center {
+    top: 4em !important;
+  }
+}
+.Toastify__toast-container--top-center .Toastify__toast-theme--dark {
+  background-color: #181830;
+}
