@@ -145,6 +145,61 @@
       ]
     },
     {
+      "name": "stakeNftV2",
+      "accounts": [
+        {
+          "name": "authority",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "stake",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "senderSplAccount",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "recieverSplAccount",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "mint",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "tokenProgram",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "rent",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": [
+        {
+          "name": "lockup",
+          "type": "u8"
+        },
+        {
+          "name": "splBump",
+          "type": "u8"
+        }
+      ]
+    },
+    {
       "name": "redeemRewards",
       "accounts": [
         {
@@ -841,9 +896,16 @@
       "code": 6011,
       "name": "OnlyGodCanDoThis",
       "msg": "Only God can do this."
+    },
+    {
+      "code": 6012,
+      "name": "InvalidLockupPeriod",
+      "msg": "Invalid lockup period."
+    },
+    {
+      "code": 6013,
+      "name": "InvalidNftTime",
+      "msg": "NFT Still Locked Up."
     }
-  ],
-  "metadata": {
-    "address": "EdYp85RTTNJJAFCXuCPc1uoSJuchchxEXr9W39tmktFu"
-  }
+  ]
 }

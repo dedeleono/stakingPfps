@@ -8,21 +8,28 @@ import NFTLoader from "../components/shared/NFTLoader";
 import Navigation from "../components/Navigation";
 import Bg from "../public/images/out.jpg";
 import usePfpStore from "../hooks/usePfpStore";
+import StakeModal from "../components/shared/StakeModal";
 
 
 const redeemAllChunk = 10;
+const unstakeAllChunk = 5;
 
 export default function Home() {
   const wallet = useAnchorWallet();
   const initState = usePfpStore((state) => state.initState);
   const stats = usePfpStore((state) => state.stats);
-  const stake = usePfpStore((state) => state.stakeNFT);
-  const unStake = usePfpStore((state) => state.unStakeNFT);
+  const stakeNFTs = usePfpStore((state) => state.stakeNFTs);
+  const unStakeNFTs = usePfpStore((state) => state.unStakeNFTs);
+  const unStakeAllNFTs = usePfpStore((state) => state.unstakeAllNFTs);
   const redeemRewards = usePfpStore((state) => state.redeemRewards);
   const redeemAllRewards = usePfpStore((state) => state.redeemAllRewards);
   const [initLoading, setInitLoading] = useState(false);
   const [walletConnected, setWalletConnected] = useState(false);
   const [isRedeemingAll, setIsRedeemingAll] = useState(false);
+  const [isUnstakingAll, setIsUnstakingAll] = useState(false);
+  const [isStaking, setIsStaking] = useState(false);
+  const [nftsToStake, setNftsToStake] = useState(null);
+  const [showStakeModal, setShowStakeModal] = useState(null);
 
   useEffect(() => {
     async function initStore() {
@@ -37,6 +44,23 @@ export default function Home() {
       setWalletConnected(false);
     }
   }, [wallet]);
+
+
+  function handleOnStake(_nftsToStake) {
+    setNftsToStake(_nftsToStake);
+    setShowStakeModal(true);
+  }
+
+  async function handleOnConfirmStake(lockPeriod: number) {
+    setIsStaking(true);
+    let stakeResult;
+    if(nftsToStake) {
+      stakeResult = await stakeNFTs(nftsToStake,lockPeriod);
+
+    }
+    setIsStaking(false);
+    setShowStakeModal(!stakeResult);
+  }
 
   return (
     <>
@@ -90,7 +114,7 @@ export default function Home() {
                 </div>
                 <div className="navbar-end">
                   <div className="mr-4 justify-center align-center">
-                    {!wallet?.publicKey ? (
+                    {!walletConnected && (
                         <div className="btn btn-primary z-50 text-white">
                           <WalletMultiButton
                               style={{
@@ -106,27 +130,6 @@ export default function Home() {
                               }}
                           />
                         </div>
-                    ) : (
-                        <>
-                          {!!(stats?.stakedNfts && stats.stakedNfts.length > 1) && (
-                              <button
-                                  className={`btn h-full btn-secondary mt-4 font-jangkuy ${isRedeemingAll && 'loading'}`}
-                                  onClick={async () => {
-                                    setIsRedeemingAll(true);
-                                    await redeemAllRewards(redeemAllChunk);
-                                    setIsRedeemingAll(false);
-                                  }}
-                              >
-                                Redeem All
-                              </button>
-                          )}
-                          {!!(stats?.stakedNfts && stats.stakedNfts.length > redeemAllChunk) && (
-                              <span className="text-[0.8rem] font-[Montserrat] font-sans leading-normal mt-2 block opacity-50">
-                                {Math.ceil(stats.stakedNfts.length / redeemAllChunk)}{" "}
-                                transactions will be prompted
-                              </span>
-                          )}
-                        </>
                     )}
                   </div>
                 </div>
@@ -155,14 +158,23 @@ export default function Home() {
                 )}
               </div>
               {!!(stats?.stakedNfts && stats.stakedNfts.length > 0) && (
-                  <div className="card gap-4 bg-neutral bg-opacity-60 mb-4 md:backdrop-blur-sm flex flex-row text-left p-8 justify-center items-center">
-                    <div>
-                      <h2 className="font-jangkuy text-2xl  md:text-4xl py-2">The first empire:<br/>Old Atlantis<span className="text-yellow"> is LIVE!</span></h2>
-                      <div className="font-bold opacity-50 max-w-3xl font-[Montserrat]">Recruit war parties and send them to get TRTN, common, rare and legendary items. These are needed to get the Gen 2 citizens. Items are NFTs that can be traded or sold on secondary markets.</div>
-                      <a href="https://game.shill-city.com/" className="btn mt-3">Recruit now</a>
+                  <div className="md:grid grid-cols-5 mb-4 gap-4">
+                    <div className="card col-span-3 gap-4 bg-neutral bg-opacity-60 md:backdrop-blur-sm flex flex-row text-left p-8 justify-center items-center">
+                      <div>
+                        <h2 className="font-jangkuy text-xl  md:text-3xl py-2">The first empire:<br/>Old Atlantis</h2>
+                        <div className="font-bold opacity-50 max-w-3xl font-[Montserrat]">Recruit war parties and send them to get TRTN, common, rare and legendary items. These are needed to get the Gen 2 citizens. Items are NFTs that can be traded or sold on secondary markets.</div>
+                        <a href="https://game.shill-city.com/" className="btn mt-3">Recruit now</a>
+                      </div>
+                      <div className="w-1/2 md:flex text-center hidden lg:block">
+                        <img className="max-w-sm inline" src="/images/logo-atlantis.png" />
+                      </div>
                     </div>
-                    <div className="w-1/2 md:flex text-center hidden lg:block">
-                      <img className="max-w-sm inline" src="/images/logo-atlantis.png" />
+                    <div className="card bg-neutral col-span-2 bg-opacity-60 md:backdrop-blur-sm text-left p-8 mt-4 md:mt-0 ">
+                      <h2 className="font-jangkuy  text-xl  md:text-3xl py-2">
+                        Locked staking <span className="text-yellow"> now available!</span>
+                      </h2>
+                      <div className="font-bold opacity-50 max-w-3xl font-[Montserrat]">Locked staking is available after unstaking your Citizens. By locking your Citizens you will receive an additional multiplier.</div>
+
                     </div>
                   </div>
               )}
@@ -177,18 +189,62 @@ export default function Home() {
                         ) : (
                             <>
                               {stats?.stakedNfts && stats.stakedNfts.length > 0 ? (
-                                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-                                    {stats.stakedNfts.map((nft) => {
-                                      return (
-                                          <NFTLoader
-                                              key={nft.id}
-                                              nft={nft}
-                                              onStake={stake}
-                                              onRedeem={redeemRewards}
-                                              unStake={unStake}
-                                          />
-                                      );
-                                    })}
+                                  <div>
+                                    {(stats.stakedNfts.length > 1) && (
+                                        <>
+                                          <div className="md:flex px-2 md:px-4 md:place-content-end gap-1 md:gap-4">
+                                            <button
+                                                className={`btn h-full md:btn-lg btn-secondary mt-4 font-jangkuy ${isRedeemingAll && 'loading'}`}
+                                                onClick={async () => {
+                                                  setIsRedeemingAll(true);
+                                                  await redeemAllRewards(redeemAllChunk);
+                                                  setIsRedeemingAll(false);
+                                                }}
+                                            >
+                                            <span className="flex  leading-normal flex-col">
+                                              <span>Redeem All</span>
+                                              {(stats.stakedNfts.length > redeemAllChunk) && (
+                                                  <span className="text-[0.55rem] md:text-[0.8rem] -mt-1 font-[Montserrat] normal-case opacity-50">
+                                                    {Math.ceil(stats.stakedNfts.length / redeemAllChunk)}{" "}
+                                                    transactions will be prompted
+                                                  </span>
+                                              )}
+                                            </span>
+                                            </button>
+                                            <button
+                                                className={`btn h-full md:btn-lg btn-outline btn-secondary mt-4 font-jangkuy ${isUnstakingAll && 'loading'}`}
+                                                onClick={async () => {
+                                                  setIsUnstakingAll(true);
+                                                  await unStakeAllNFTs();
+                                                  setIsUnstakingAll(false);
+                                                }}
+                                            >
+                                            <span className="flex  leading-normal flex-col">
+                                            <span>unStake All</span>
+                                              {(stats.stakedNfts.length > unstakeAllChunk) && (
+                                                  <span className="text-[0.55rem] md:text-[0.8rem] -mt-1 font-[Montserrat] normal-case opacity-50">
+                                          {Math.ceil(stats.stakedNfts.length / unstakeAllChunk)}{" "}
+                                                    transactions will be prompted
+                                            </span>
+                                              )}
+                                            </span>
+                                            </button>
+                                          </div>
+                                        </>
+                                    )}
+                                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+                                      {stats.stakedNfts.map((nft) => {
+                                        return (
+                                            <NFTLoader
+                                                key={nft.id}
+                                                nft={nft}
+                                                onStake={(_nftToStake) => handleOnStake([_nftToStake])}
+                                                onRedeem={redeemRewards}
+                                                unStake={(stakePubKey,nftPubKey) => unStakeNFTs([{stakePubKey, nftPubKey}])}
+                                            />
+                                        );
+                                      })}
+                                    </div>
                                   </div>
                               ) : (
                                   <div className="font-scratchy text-white text-5xl">
@@ -207,6 +263,20 @@ export default function Home() {
               </div>
               {!!(walletConnected && stats?.unStakedNfts) && (
                   <div className="border mockup-window border-base-200 mb-8">
+                    <div className="flex -mt-6 pb-4  px-4  place-content-end">
+                      {(stats.unStakedNfts.length > 1) && (
+                          <button
+                              className={`btn h-full md:btn-lg btn-secondary font-jangkuy`}
+                              onClick={() => {
+                                handleOnStake(stats.unStakedNfts);
+                              }}
+                          >
+                            <span className="flex  leading-normal flex-col">
+                              <span>Stake All</span>
+                            </span>
+                          </button>
+                      )}
+                    </div>
                     <div className="flex justify-center px-2 py-4 border-t border-base-200">
                       <div>
                         {!!(stats?.unStakedNfts && stats.unStakedNfts.length == 0 && wallet?.publicKey) && (
@@ -221,9 +291,9 @@ export default function Home() {
                               <NFTLoader
                                   key={nft.id}
                                   nft={nft}
-                                  onStake={stake}
+                                  onStake={(_nftToStake) => handleOnStake([_nftToStake])}
                                   onRedeem={redeemRewards}
-                                  unStake={unStake}
+                                  unStake={(stakePubKey,nftPubKey) => unStakeNFTs([{stakePubKey, nftPubKey}])}
                               />
                           );
                         })}
@@ -235,7 +305,15 @@ export default function Home() {
           </div>
         </div>
         <ToastContainer position="top-center" theme="dark"/>
+        <StakeModal
+            isOpen={showStakeModal}
+            nftsToStake={nftsToStake}
+            isPending={isStaking}
+            handleClose={() => setShowStakeModal(false)}
+            handleConfirm={handleOnConfirmStake}
+        />
       </main>
+
     </>
   );
 }
