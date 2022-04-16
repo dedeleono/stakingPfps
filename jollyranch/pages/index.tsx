@@ -264,7 +264,7 @@ export default function Home() {
               {!!(walletConnected && stats?.unStakedNfts) && (
                   <div className="border mockup-window border-base-200 mb-8">
                     <div className="flex -mt-6 pb-4  px-4  place-content-end">
-                      {(stats.unStakedNfts.length > 1) && (
+                      {/* {(stats.unStakedNfts.length > 1) && (
                           <button
                               className={`btn h-full md:btn-lg btn-secondary font-jangkuy`}
                               onClick={() => {
@@ -275,7 +275,7 @@ export default function Home() {
                               <span>Stake All</span>
                             </span>
                           </button>
-                      )}
+                      )} */}
                     </div>
                     <div className="flex justify-center px-2 py-4 border-t border-base-200">
                       <div>
