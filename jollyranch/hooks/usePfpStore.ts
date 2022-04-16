@@ -15,7 +15,8 @@ import hashTable from "../lib/hash_table/pfp_hash_table.json";
 import legendariesHashTable from "../lib/hash_table/pfp_legendaries_hash_table.json";
 import NftsData from "../utils/nftsData";
 import {toast} from "react-toastify";
-import {timeout} from "../utils/common";
+import {chunks, timeout} from "../utils/common";
+import {PFP_LOCK_MULTIPLIERS} from "../utils/pfp";
 
 type PfpState = {
     program: Program;
@@ -29,6 +30,11 @@ type PfpState = {
     jollyAccount: any;
 };
 
+type UnStakeNft = {
+    stakePubKey: PublicKey;
+    nftPubKey: PublicKey;
+}
+
 type PfpStats = {
     totalStaked: number,
     stakedNfts: any,
@@ -40,8 +46,10 @@ interface UsePfpStore {
     stats: PfpStats,
     getStats: () => Promise<boolean>;
     initState: (wallet: AnchorWallet,loadStats?: boolean) => Promise<boolean>;
-    stakeNFT:(nftPubKey: PublicKey) => Promise<boolean>;
-    unStakeNFT:(stakePubKey: PublicKey, nftPubKey: PublicKey) => Promise<boolean>;
+    stakeAllNFTs:(lockPeriod) => Promise<boolean>;
+    stakeNFTs:(nftPubKeys: PublicKey[], lockPeriod) => Promise<boolean>;
+    unstakeAllNFTs:() => Promise<boolean>;
+    unStakeNFTs:(unStakeNfts: UnStakeNft[]) => Promise<boolean>;
     redeemRewards:(stakePubKey: PublicKey) => Promise<boolean>;
     redeemAllRewards:(redeemAllChunk: number) => Promise<boolean>;
 }
@@ -51,7 +59,7 @@ const usePfpStore = create<UsePfpStore>((set, get) => ({
     stats: {} as PfpStats,
     getStats: async () => {
         const program = get().state.program;
-        const nfts = new NftsData(program,hashTable,legendariesHashTable, 4.2, 10);
+        const nfts = new NftsData(program,hashTable,legendariesHashTable, 4.2, 10, PFP_LOCK_MULTIPLIERS);
         const totalStaked = await nfts.getTotalStakedNfts();
         const stakedNfts = await nfts.getWalletStakedNfts();
         const unStakedNfts = await nfts.getWalletUnStakedNfts();
@@ -116,94 +124,127 @@ const usePfpStore = create<UsePfpStore>((set, get) => ({
         }
         return true
     },
-    stakeNFT: async (nftPubKey: PublicKey) => {
+    stakeAllNFTs: async(lockPeriod: number) =>{
+        const _stats = get().stats;
+        const unStakedNFTs = _stats.unStakedNfts.map(_unStakeNft => _unStakeNft.mint)
+        return await get().stakeNFTs(unStakedNFTs, lockPeriod);
+    },
+    stakeNFTs: async (nftPubKeys: PublicKey[], lockPeriod: number) => {
         const _state = get().state;
-        const nft = new anchor.web3.PublicKey(nftPubKey);
-        const stake = anchor.web3.Keypair.generate();
-        const [stake_spl, stakeBump] =
-            await anchor.web3.PublicKey.findProgramAddress(
-                [stake.publicKey.toBuffer()],
-                _state.program.programId
-            );
-        let wallet_nft_account = await Token.getAssociatedTokenAddress(
-            ASSOCIATED_TOKEN_PROGRAM_ID,
-            TOKEN_PROGRAM_ID,
-            nft,
-            _state.program.provider.wallet.publicKey
-        );
-
-        // check if token has an associated account
-        // if not send from the wallet account
-        const largestAccounts = await _state.connection.getTokenLargestAccounts(
-            nft
-        );
-        const hasATA =
-            largestAccounts.value[0].address.toString() ===
-            wallet_nft_account.toString();
-        if (!hasATA) {
-            wallet_nft_account = largestAccounts.value[0].address;
-        }
         try {
-            await _state.program.rpc.stakeNft(stakeBump, {
-                accounts: {
-                    authority: _state.program.provider.wallet.publicKey.toString(),
-                    stake: stake.publicKey.toString(),
-                    senderSplAccount: wallet_nft_account.toString(),
-                    recieverSplAccount: stake_spl.toString(),
-                    mint: nft.toString(),
-                    systemProgram: anchor.web3.SystemProgram.programId.toString(),
-                    tokenProgram: TOKEN_PROGRAM_ID.toString(),
-                    rent: anchor.web3.SYSVAR_RENT_PUBKEY.toString(),
-                },
-                signers: [stake],
-            });
+            let tx;
+            for (const _chunck of chunks(nftPubKeys, 5)) {
+                tx = new anchor.web3.Transaction();
+                const signers = [];
+                for (const _nftPubKey of _chunck) {
+                    const nft = new anchor.web3.PublicKey(_nftPubKey);
+                    const stake = new anchor.web3.Keypair();
+                    signers.push(stake);
+                    const [stake_spl, stakeBump] =
+                        await anchor.web3.PublicKey.findProgramAddress(
+                            [stake.publicKey.toBuffer()],
+                            _state.program.programId
+                        );
+                    let wallet_nft_account = await Token.getAssociatedTokenAddress(
+                        ASSOCIATED_TOKEN_PROGRAM_ID,
+                        TOKEN_PROGRAM_ID,
+                        nft,
+                        _state.program.provider.wallet.publicKey
+                    );
+
+                    // check if token has an associated account
+                    // if not send from the wallet account
+                    const largestAccounts = await _state.connection.getTokenLargestAccounts(
+                        nft
+                    );
+                    const hasATA =
+                        largestAccounts.value[0].address.toString() ===
+                        wallet_nft_account.toString();
+                    if (!hasATA) {
+                        wallet_nft_account = largestAccounts.value[0].address;
+                    }
+
+                    const stakeNftResult = await _state.program.instruction.stakeNftV2(lockPeriod, stakeBump, {
+                        accounts: {
+                            authority: _state.program.provider.wallet.publicKey.toString(),
+                            stake: stake.publicKey.toString(),
+                            senderSplAccount: wallet_nft_account.toString(),
+                            recieverSplAccount: stake_spl.toString(),
+                            mint: nft.toString(),
+                            systemProgram: anchor.web3.SystemProgram.programId.toString(),
+                            tokenProgram: TOKEN_PROGRAM_ID.toString(),
+                            rent: anchor.web3.SYSVAR_RENT_PUBKEY.toString(),
+                        },
+                        signers: [stake],
+                    });
+                    tx.add(stakeNftResult);
+                }
+                await _state.program.provider.send(tx, signers);
+            }
             await timeout(300);
             get().getStats();
             toast.success("Stake completed!");
             return true;
         } catch (e:any) {
-            console.log('error calling rpc stakeNft', e);
+            console.log('error calling rpc stakeNftV2', e);
             toast.error(`Stake failed ${e?.message ? e.message : ''}`);
             return false;
         }
     },
-    unStakeNFT: async (stakePubKey: PublicKey, nftPubKey: PublicKey) => {
+    unstakeAllNFTs: async() =>{
+        const _stats = get().stats;
+        const stakedNFTs = _stats.stakedNfts.filter(_stakeNft => !_stakeNft.isLocked).map(_stakeNft => ({
+            stakePubKey: _stakeNft.stakeAccount.publicKey,
+            nftPubKey: _stakeNft.stakeAccount.account.mint,
+        }))
+        return await get().unStakeNFTs(stakedNFTs);
+    },
+    unStakeNFTs: async (unStakeNfts ) => {
         const _state = get().state;
-        const wallet_nft_account = await Token.getAssociatedTokenAddress(
-            ASSOCIATED_TOKEN_PROGRAM_ID,
-            TOKEN_PROGRAM_ID,
-            nftPubKey,
-            _state.program.provider.wallet.publicKey
-        );
-        const [stake_spl, _stakeBump] =
-            await anchor.web3.PublicKey.findProgramAddress(
-                [stakePubKey.toBuffer()],
-                _state.program.programId
-            );
         try {
-            await _state.program.rpc.redeemNft({
-                accounts: {
-                    stake: stakePubKey.toString(),
-                    jollyranch: _state.jollyranch.toString(),
-                    authority: _state.program.provider.wallet.publicKey.toString(),
-                    senderSplAccount: stake_spl.toString(),
-                    recieverSplAccount: wallet_nft_account.toString(),
-                    senderTritonAccount: _state.recieverSplAccount.toString(),
-                    recieverTritonAccount: _state.wallet_token_account.toString(),
-                    mint: _state.spl_token.toString(),
-                    nft: nftPubKey.toString(),
-                    systemProgram: anchor.web3.SystemProgram.programId.toString(),
-                    tokenProgram: TOKEN_PROGRAM_ID.toString(),
-                    associatedTokenProgram: ASSOCIATED_TOKEN_PROGRAM_ID.toString(),
-                    rent: anchor.web3.SYSVAR_RENT_PUBKEY.toString(),
-                },
-            });
+            let tx;
+            for (const _chunck of chunks(unStakeNfts, 5)) {
+                tx = new anchor.web3.Transaction();
+                for (const _unstakeNft of _chunck) {
+                    const wallet_nft_account = await Token.getAssociatedTokenAddress(
+                        ASSOCIATED_TOKEN_PROGRAM_ID,
+                        TOKEN_PROGRAM_ID,
+                        _unstakeNft.nftPubKey,
+                        _state.program.provider.wallet.publicKey
+                    );
+                    const [stake_spl, _stakeBump] =
+                        await anchor.web3.PublicKey.findProgramAddress(
+                            [_unstakeNft.stakePubKey.toBuffer()],
+                            _state.program.programId
+                        );
+                    const redeemNftResult = await _state.program.instruction.redeemNft({
+                        accounts: {
+                            stake: _unstakeNft.stakePubKey.toString(),
+                            jollyranch: _state.jollyranch.toString(),
+                            authority: _state.program.provider.wallet.publicKey.toString(),
+                            senderSplAccount: stake_spl.toString(),
+                            recieverSplAccount: wallet_nft_account.toString(),
+                            senderTritonAccount: _state.recieverSplAccount.toString(),
+                            recieverTritonAccount: _state.wallet_token_account.toString(),
+                            mint: _state.spl_token.toString(),
+                            nft: _unstakeNft.nftPubKey.toString(),
+                            systemProgram: anchor.web3.SystemProgram.programId.toString(),
+                            tokenProgram: TOKEN_PROGRAM_ID.toString(),
+                            associatedTokenProgram: ASSOCIATED_TOKEN_PROGRAM_ID.toString(),
+                            rent: anchor.web3.SYSVAR_RENT_PUBKEY.toString(),
+                        },
+                    });
+                    tx.add(redeemNftResult);
+                }
+                await _state.program.provider.send(tx);
+            }
             await timeout(300);
             get().getStats();
             toast.success("Unstake completed!");
             return true;
+
         } catch (e:any) {
-            console.log('error calling rpc unstakeNFT', e);
+            console.log('error calling rpc unStakeNFT', e);
             toast.error(`UnStake failed ${e?.message ? e.message : ''}`);
             return false;
         }

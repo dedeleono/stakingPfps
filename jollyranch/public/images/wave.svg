@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="1802px" height="439px" viewBox="0 0 1802 439" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 63.1 (92452) - https://sketch.com -->
+    <title>Group 5</title>
+    <desc>Created with Sketch.</desc>
+    <g id="tidy-pool" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Group-5" transform="translate(901.000000, 219.500000) scale(-1, 1) translate(-901.000000, -219.500000) " fill="#10314F">
+            <path d="M0,0 L1802,0 L1802,400.985053 C1681.26577,381.63588 1553.93243,374.307529 1420,379 C1196.09647,386.844707 920.375,439 582.5,439 C293.666276,439 99.4996097,423 0,391 L0,0 Z" id="Rectangle" opacity="0.108994983"></path>
+            <path d="M0,0 L1802,0 L1802,380.985053 C1655.89189,357.768182 1515.87162,348.505981 1381.93919,353.198452 C1158.03566,361.043159 997.976351,397 660.101351,397 C371.267628,397 151.233844,384.995018 0,360.985053 L0,0 Z" id="Rectangle" opacity="0.26004101"></path>
+        </g>
+    </g>
+</svg>

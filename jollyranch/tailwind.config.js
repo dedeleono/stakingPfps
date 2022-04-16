@@ -37,7 +37,7 @@ module.exports = {
           "base-100": "transparent",
           "base-200": "#ffffff",
           "base-300": "#A134FE",
-          "base-content": "#000000",
+          "base-content": "#fff",
           info: "#2094f3",
           success: "#009485",
           warning: "#ff9900",

@@ -1,25 +1,35 @@
-import React, {FC, useState} from "react";
+import React, {FC, useEffect, useState} from "react";
 import CountUpValue from "./CountUpValue";
 import Image from "next/image";
-import {AiOutlineCloudDownload, AiOutlineInfoCircle, AiOutlineCloseCircle} from "react-icons/ai";
+import {AiOutlineCloudDownload, AiOutlineInfoCircle, AiOutlineCloseCircle, AiFillLock} from "react-icons/ai";
+import {PublicKey} from "@solana/web3.js";
 
 interface NFTLoaderProps {
   nft: NFT;
   onStake?: any;
   onRedeem?: any;
-  unStake?: any;
+  unStake?: (stakePubKey: PublicKey, nftPubKey: PublicKey) => void;
 }
 interface NFT {
   id: number;
+  isLocked?:boolean,
+  lockEndsIn?: string,
   isStaked: boolean,
   isLegendary: boolean,
   attributes: any;
   image: string;
   name: string;
   mint: any;
-  stakeAccount: any;
-  redemptionRate: number,
-  estimateRewards: number,
+  stakeAccount?: {
+    publicKey: PublicKey;
+    account: {
+      mint:  PublicKey;
+      startDate: number;
+      endDate: number;
+    }
+  };
+  redemptionRate: number;
+  estimateRewards: number;
 }
 
 const NFTLoader: FC<NFTLoaderProps> = ({
@@ -31,6 +41,7 @@ const NFTLoader: FC<NFTLoaderProps> = ({
   const [imageLoaded, setImageLoaded] = useState(false);
   const [isPending, setIsPending] = useState(false);
   const [showAttributes, setShowAttributes] = useState(false);
+
   async function handleOnStake() {
     setIsPending(true);
     await onStake(nft.mint);
@@ -59,7 +70,7 @@ const NFTLoader: FC<NFTLoaderProps> = ({
                 <div className="btn loading btn-circle btn-lg btn-ghost" />
               </div>)}
           {nft.image && (
-            <div className="flex">
+            <div className="flex relative">
               <Image
                   objectFit="cover"
                   quality={80}
@@ -78,6 +89,11 @@ const NFTLoader: FC<NFTLoaderProps> = ({
               >
                 <AiOutlineCloudDownload size={24} />
               </a>
+              {nft.isLocked && (
+                  <span className="indicator-item badge absolute !text-2xs top-3 left-3 bg-opacity-50 border-0 badge-accent font-montserrat">
+                      <AiFillLock className="mr-1" />{' '}Lock ends{' '}{nft.lockEndsIn}
+                  </span>
+              )}
               {showAttributes && (
                   <div className="absolute text-sm grid grid-cols-2 top-0 left-0 h-full w-full bg-primary-content/80 p-4 pt-10 text-left">
                     {nft.attributes.map((_attribute: any) => (
@@ -144,7 +160,7 @@ const NFTLoader: FC<NFTLoaderProps> = ({
                       Daily Rewards
                     </div>
                     <div className="text-[0.8rem]">
-                      {nft.redemptionRate}{' '}$TRTN
+                      {Math.round(nft.redemptionRate * 100) / 100}{' '}$TRTN
                     </div>
                   </div>
                 </div>
@@ -158,7 +174,7 @@ const NFTLoader: FC<NFTLoaderProps> = ({
                   </button>
                   <button
                       className="btn rounded-md btn-sm btn-accent font-[Jangkuy] text-[0.8rem]"
-                      disabled={isPending}
+                      disabled={isPending || nft.isLocked}
                       onClick={handleOnUnStake}
                   >
                     unstake
@@ -172,7 +188,7 @@ const NFTLoader: FC<NFTLoaderProps> = ({
                   <p
                       className="text-lg text-yellow font-bold"
                   >
-                    {nft.redemptionRate}{' '}$TRTN
+                    {Math.round(nft.redemptionRate * 100) / 100}{' '}$TRTN
                   </p>
                 </div>
                 <div className="justify-center card-actions">

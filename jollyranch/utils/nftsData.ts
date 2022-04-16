@@ -6,6 +6,12 @@ import {AccountInfo, ConfirmOptions, Connection} from "@solana/web3.js";
 import axios from "axios";
 import {programs} from "@metaplex/js";
 import {TOKEN_PROGRAM_ID} from "@solana/spl-token";
+import RelativeTime from '@yaireo/relative-time'
+
+type LockMultiplier = {
+    days: number;
+    multiplier: number;
+}
 
 export default class NftsData {
     program: Program;
@@ -15,12 +21,14 @@ export default class NftsData {
     hashTableLegendaries: string[];
     redemptionRate: number;
     redemptionRateLegendary: number;
+    lockMultipliers: LockMultiplier[];
     constructor (
         program: Program,
         hashTable: string[],
         hashTableLegendaries: string[] = [],
         redemptionRate: number,
         redemptionRateLegendary: number,
+        lockMultipliers: LockMultiplier[] = [],
     ) {
         this.program = program;
         this.rpcEndpoint = process.env.NEXT_PUBLIC_RPC_ENDPOINT as string
@@ -32,6 +40,7 @@ export default class NftsData {
         this.hashTableLegendaries = hashTableLegendaries;
         this.redemptionRate = redemptionRate;
         this.redemptionRateLegendary = redemptionRateLegendary;
+        this.lockMultipliers = lockMultipliers;
     }
     async getWalletUnStakedNfts() {
         // console.log("fetched mint hashes");
@@ -105,24 +114,53 @@ export default class NftsData {
         });
 
         const nftsData = await this.getNftsData(mints);
-        // append stakedNfts data berfore returning
+        // append stakedNfts data before returning
         return nftsData.map(nftData => {
             const stakeAccount = stakedNfts.find(stakedNft => nftData.mint === stakedNft.account.mint.toString());
             let estimateRewards = 0;
-            if(stakeAccount && nftData.redemptionRate) {
-                const currDate = new Date().getTime() / 1000;
-                const daysElapsed =
-                    Math.abs(currDate - stakeAccount.account.startDate) /
-                    (60 * 60 * 24);
-                const amountRedeemed =
-                    stakeAccount.account.amountRedeemed.toNumber() / 1e6;
-                estimateRewards = nftData.redemptionRate * daysElapsed - amountRedeemed;
+            let isLocked = false;
+            let lockMultiplier = null;
+            let lockEndsIn = null;
+            let redemptionRate = null;
+            if(stakeAccount) {
+                if(stakeAccount.account.endDate) {
+                    const lockEndUnix = stakeAccount.account.endDate * 1000;
+                    const lockStartUnix = stakeAccount.account.startDate * 1000;
+                    const todayUnix = parseInt((new Date().getTime()).toFixed(0));
+                    //const future = new Date();
+                    //future.setDate(future.getDate() + 7);
+                    //const futureUnix = parseInt((future.getTime()).toFixed(0));
+                    if( lockEndUnix > todayUnix) {
+                        isLocked = true;
+                        const lockPeriodInDays = (lockEndUnix - lockStartUnix) / (1000 * 3600 * 24);
+                        lockMultiplier = this.lockMultipliers.find(multiplier => multiplier.days === lockPeriodInDays);
+                        const relativeTime = new RelativeTime({ locale: 'en' });
+                        lockEndsIn = relativeTime.from(new Date(stakeAccount.account.endDate * 1000))
+                    }
+                }
+                redemptionRate = nftData.redemptionRate;
+                if(redemptionRate) {
+                    if(lockMultiplier) {
+                        redemptionRate = redemptionRate * lockMultiplier.multiplier;
+                    }
+                    const currDate = new Date().getTime() / 1000;
+                    const daysElapsed =
+                        Math.abs(currDate - stakeAccount.account.startDate) /
+                        (60 * 60 * 24);
+                    const amountRedeemed =
+                        stakeAccount.account.amountRedeemed.toNumber() / 1e6;
+                    estimateRewards = redemptionRate * daysElapsed - amountRedeemed;
+                }
             }
             return {
                 ...nftData,
+                redemptionRate,
                 stakeAccount,
                 estimateRewards,
                 isStaked: true,
+                isLocked,
+                lockMultiplier,
+                lockEndsIn,
             }
         });
 
