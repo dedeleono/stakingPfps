@@ -133,7 +133,7 @@ const usePfpStore = create<UsePfpStore>((set, get) => ({
         const _state = get().state;
         try {
             let tx;
-            for (const _chunck of chunks(nftPubKeys, 5)) {
+            for (const _chunck of chunks(nftPubKeys, 4)) {
                 tx = new anchor.web3.Transaction();
                 const signers = [];
                 for (const _nftPubKey of _chunck) {

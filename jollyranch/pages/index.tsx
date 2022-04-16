@@ -171,9 +171,10 @@ export default function Home() {
                     </div>
                     <div className="card bg-neutral col-span-2 bg-opacity-60 md:backdrop-blur-sm text-left p-8 mt-4 md:mt-0 ">
                       <h2 className="font-jangkuy  text-xl  md:text-3xl py-2">
-                        Locked staking <span className="text-yellow"> now available!</span>
+                        Locking period staking <span className="text-yellow"> is live!</span>
                       </h2>
-                      <div className="font-bold opacity-50 max-w-3xl font-[Montserrat]">Locked staking is available after unstaking your Citizens. By locking your Citizens you will receive an additional multiplier.</div>
+                      <div className="font-bold opacity-50 max-w-3xl font-[Montserrat]">Stake and lock your NFT for a period of time to increase the amount of TRTN you&apos;ll get!<br /><br />
+                        Unstake your citizen and restake to get the option. During the lock period you can still redeem your TRTN.</div>
 
                     </div>
                   </div>
@@ -264,18 +265,18 @@ export default function Home() {
               {!!(walletConnected && stats?.unStakedNfts) && (
                   <div className="border mockup-window border-base-200 mb-8">
                     <div className="flex -mt-6 pb-4  px-4  place-content-end">
-                      {/* {(stats.unStakedNfts.length > 1) && (
+                      {(stats.unStakedNfts.length > 1) && (
                           <button
                               className={`btn h-full md:btn-lg btn-secondary font-jangkuy`}
                               onClick={() => {
-                                handleOnStake(stats.unStakedNfts);
+                                handleOnStake(stats.unStakedNfts.map(_unStakeNft => _unStakeNft.mint));
                               }}
                           >
                             <span className="flex  leading-normal flex-col">
                               <span>Stake All</span>
                             </span>
                           </button>
-                      )} */}
+                      )}
                     </div>
                     <div className="flex justify-center px-2 py-4 border-t border-base-200">
                       <div>

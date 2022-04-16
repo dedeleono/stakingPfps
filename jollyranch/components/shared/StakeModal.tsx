@@ -63,9 +63,9 @@ const StakeModal: FC<DepositConfirmModalProps>  = ({isOpen, isPending,handleConf
                 <img src="/images/bubbles-2.svg" className="absolute top-0 left-0" />
                 <span className="flex  leading-normal flex-col">
                  <span>Stake {!!lockPeriod && ` & lock for ${lockPeriod} days`}</span>
-                    {(nftsToStake && nftsToStake.length > 5) && (
+                    {(nftsToStake && nftsToStake.length > 4) && (
                         <span className="text-[0.55rem] md:text-[0.8rem] -mt-1 font-[Montserrat] normal-case opacity-50">
-                            {Math.ceil(nftsToStake.length / 5)}{" "}
+                            {Math.ceil(nftsToStake.length / 4)}{" "}
                             transactions will be prompted
                         </span>
                     )}
