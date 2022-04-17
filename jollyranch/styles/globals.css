@@ -39,6 +39,10 @@ a {
   justify-content: center !important;
 }
 
+.wallet-adapter-button.wallet-adapter-button-trigger {
+  white-space: nowrap;
+}
+
 .wallet-adapter-button .wallet-adapter-button-start-icon {
   margin-right: 5px;
 }
