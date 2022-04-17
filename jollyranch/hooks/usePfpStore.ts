@@ -8,7 +8,6 @@ import {
     TOKEN_PROGRAM_ID,
 } from "@solana/spl-token";
 import { AnchorWallet } from "@solana/wallet-adapter-react";
-import {getPfpProgram} from "../utils/program";
 import {getTrtnToken} from "../utils/token";
 
 import hashTable from "../lib/hash_table/pfp_hash_table.json";
@@ -16,7 +15,7 @@ import legendariesHashTable from "../lib/hash_table/pfp_legendaries_hash_table.j
 import NftsData from "../utils/nftsData";
 import {toast} from "react-toastify";
 import {chunks, timeout} from "../utils/common";
-import {PFP_LOCK_MULTIPLIERS} from "../utils/pfp";
+import {PFP_LOCK_MULTIPLIERS, getPfpProgram} from "../utils/pfp";
 
 type PfpState = {
     program: Program;
@@ -46,8 +45,8 @@ interface UsePfpStore {
     stats: PfpStats,
     getStats: () => Promise<boolean>;
     initState: (wallet: AnchorWallet,loadStats?: boolean) => Promise<boolean>;
-    stakeAllNFTs:(lockPeriod) => Promise<boolean>;
-    stakeNFTs:(nftPubKeys: PublicKey[], lockPeriod) => Promise<boolean>;
+    stakeAllNFTs:(lockPeriod: number) => Promise<boolean>;
+    stakeNFTs:(nftPubKeys: PublicKey[], lockPeriod: number) => Promise<boolean>;
     unstakeAllNFTs:() => Promise<boolean>;
     unStakeNFTs:(unStakeNfts: UnStakeNft[]) => Promise<boolean>;
     redeemRewards:(stakePubKey: PublicKey) => Promise<boolean>;
@@ -126,7 +125,7 @@ const usePfpStore = create<UsePfpStore>((set, get) => ({
     },
     stakeAllNFTs: async(lockPeriod: number) =>{
         const _stats = get().stats;
-        const unStakedNFTs = _stats.unStakedNfts.map(_unStakeNft => _unStakeNft.mint)
+        const unStakedNFTs = _stats.unStakedNfts.map((_unStakeNft: { mint: string; }) => _unStakeNft.mint)
         return await get().stakeNFTs(unStakedNFTs, lockPeriod);
     },
     stakeNFTs: async (nftPubKeys: PublicKey[], lockPeriod: number) => {
@@ -193,7 +192,7 @@ const usePfpStore = create<UsePfpStore>((set, get) => ({
     },
     unstakeAllNFTs: async() =>{
         const _stats = get().stats;
-        const stakedNFTs = _stats.stakedNfts.filter(_stakeNft => !_stakeNft.isLocked).map(_stakeNft => ({
+        const stakedNFTs = _stats.stakedNfts.filter((_stakeNft:any) => !_stakeNft.isLocked).map((_stakeNft:any) => ({
             stakePubKey: _stakeNft.stakeAccount.publicKey,
             nftPubKey: _stakeNft.stakeAccount.account.mint,
         }))
