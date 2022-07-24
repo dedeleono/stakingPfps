@@ -20,6 +20,7 @@ module.exports = withTM({
     domains: [
       'infura-ipfs.io',
       'arweave.net',
+      'shdw-drive.genesysgo.net'
     ],
   },
   webpack5: true,

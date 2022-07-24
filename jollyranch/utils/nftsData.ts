@@ -64,6 +64,44 @@ export default class NftsData {
 
         return this.getNftsData(tokenAccountsMints);
     }
+    // async getStakedSnapShot() {
+    //     let totalAccounts = { totalCount: 0 };
+    //     const totalStaked = await this.program.account.stake.all();
+    
+    //     totalStaked.forEach((element) => {
+    //       if (!element.account.withdrawn) {
+    //         if (totalAccounts[element.account.authority.toString()] == null) {
+    //           totalAccounts[element.account.authority.toString()] = [element.account.mint.toString()];
+    //           totalAccounts.totalCount++;
+    //         } else {
+    //           totalAccounts[element.account.authority.toString()].push(element.account.mint.toString());
+    //           totalAccounts.totalCount++;
+    //         }
+    //       }
+    //     });
+        
+    //     console.log(totalAccounts);
+    //   };
+
+    //   const getStakedSnapShot = async () => {
+    //     let totalAccounts = { totalCount: 0 };
+    //     const totalStaked = await jollyState.program.account.stake.all();
+    
+    //     totalStaked.forEach((element) => {
+    //       if (!element.account.withdrawn) {
+    //         if (totalAccounts[element.account.authority.toString()] == null) {
+    //           totalAccounts[element.account.authority.toString()] = [element.account.mint.toString()];
+    //           totalAccounts.totalCount++;
+    //         } else {
+    //           totalAccounts[element.account.authority.toString()].push(element.account.mint.toString());
+    //           totalAccounts.totalCount++;
+    //         }
+    //       }
+    //     });
+    
+    //     console.log(totalAccounts);
+    //   };
+
     async getWalletStakedNfts() {
         const newStakedNFTs = await this.program.account.stake.all([
             {
@@ -207,10 +245,10 @@ export default class NftsData {
         // console.log("metadata", metadatas);
 
         return await Promise.all(metadatas.map(async metadata => {
-            const uri = metadata.data.data.uri.replace("dweb.link", "infura-ipfs.io")
+            const uri = metadata.data.data.uri
             const { data } = await axios.get(uri);
             let image = data?.image;
-            if(image.includes('ipfs.dweb.link')){
+            if(image?.includes('ipfs.dweb.link')){
                 // We need to transform https://xxx.ipfs.dweb.link to https://infura-ipfs.io/ipfs/xxx
                 // nextjs does not allow whitelisting subdomains so we need to fetch images from 1 root domain
                 const id = image.split('//').pop().split('.')[0];
@@ -222,7 +260,7 @@ export default class NftsData {
                 ...data,
                 image,
                 isLegendary,
-                id: Number(data.name.replace(/^\D+/g, "").split(" - ")[0]),
+                id: Number(data.name?.replace(/^\D+/g, "").split(" - ")[0]),
                 redemptionRate: isLegendary ? this.redemptionRateLegendary : this.redemptionRate,
                 mint: metadata.data.mint,
             };

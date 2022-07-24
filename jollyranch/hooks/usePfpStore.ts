@@ -62,6 +62,7 @@ const usePfpStore = create<UsePfpStore>((set, get) => ({
         const totalStaked = await nfts.getTotalStakedNfts();
         const stakedNfts = await nfts.getWalletStakedNfts();
         const unStakedNfts = await nfts.getWalletUnStakedNfts();
+        // const snapshot = await nfts.getStakedSnapShot();
         set({
             stats: {
                 totalStaked,
