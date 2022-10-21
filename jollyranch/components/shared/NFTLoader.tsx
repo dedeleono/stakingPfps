@@ -174,7 +174,7 @@ const NFTLoader: FC<NFTLoaderProps> = ({
                   </button>
                   <button
                       className="btn rounded-md btn-sm btn-accent font-[Jangkuy] text-[0.8rem]"
-                      disabled={isPending || nft.isLocked}
+                      disabled={isPending}
                       onClick={handleOnUnStake}
                   >
                     unstake
