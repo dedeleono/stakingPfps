@@ -1,11 +1,11 @@
-import {Program} from "@project-serum/anchor";
-import {getMetaplexToken} from "./token";
+import { Program } from "@project-serum/anchor";
+import { getMetaplexToken } from "./token";
 import * as anchor from "@project-serum/anchor";
-import {chunks} from "./common";
-import {AccountInfo, ConfirmOptions, Connection} from "@solana/web3.js";
+import { chunks } from "./common";
+import { AccountInfo, ConfirmOptions, Connection } from "@solana/web3.js";
 import axios from "axios";
-import {programs} from "@metaplex/js";
-import {TOKEN_PROGRAM_ID} from "@solana/spl-token";
+import { programs } from "@metaplex/js";
+import { TOKEN_PROGRAM_ID } from "@solana/spl-token";
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 import RelativeTime from '@yaireo/relative-time'
@@ -24,7 +24,7 @@ export default class NftsData {
     redemptionRate: number;
     redemptionRateLegendary: number;
     lockMultipliers: LockMultiplier[];
-    constructor (
+    constructor(
         program: Program,
         hashTable: string[],
         hashTableLegendaries: string[] = [],
@@ -67,7 +67,7 @@ export default class NftsData {
     // async getStakedSnapShot() {
     //     let totalAccounts = { totalCount: 0 };
     //     const totalStaked = await this.program.account.stake.all();
-    
+
     //     totalStaked.forEach((element) => {
     //       if (!element.account.withdrawn) {
     //         if (totalAccounts[element.account.authority.toString()] == null) {
@@ -79,14 +79,14 @@ export default class NftsData {
     //         }
     //       }
     //     });
-        
+
     //     console.log(totalAccounts);
     //   };
 
     //   const getStakedSnapShot = async () => {
     //     let totalAccounts = { totalCount: 0 };
     //     const totalStaked = await jollyState.program.account.stake.all();
-    
+
     //     totalStaked.forEach((element) => {
     //       if (!element.account.withdrawn) {
     //         if (totalAccounts[element.account.authority.toString()] == null) {
@@ -98,7 +98,7 @@ export default class NftsData {
     //         }
     //       }
     //     });
-    
+
     //     console.log(totalAccounts);
     //   };
 
@@ -141,9 +141,9 @@ export default class NftsData {
                         ],
                     })
                     .then(async (res) => {
-                        if(res?.data?.result?.value?.length) {
+                        if (res?.data?.result?.value?.length) {
                             // Filter nulls first (user wallet may not be updated) and then map
-                            return res.data.result.value.filter((v:any) => v).map((v:any) => v.data.parsed.info.mint);
+                            return res.data.result.value.filter((v: any) => v).map((v: any) => v.data.parsed.info.mint);
                         } else {
                             return [];
                         }
@@ -162,15 +162,15 @@ export default class NftsData {
             let lockMultiplier = null;
             let lockEndsIn = null;
             let redemptionRate = null;
-            if(stakeAccount) {
-                if(stakeAccount.account.endDate) {
+            if (stakeAccount) {
+                if (stakeAccount.account.endDate) {
                     const lockEndUnix = stakeAccount.account.endDate * 1000;
                     const lockStartUnix = stakeAccount.account.startDate * 1000;
                     const todayUnix = parseInt((new Date().getTime()).toFixed(0));
                     //const future = new Date();
                     //future.setDate(future.getDate() + 7);
                     //const futureUnix = parseInt((future.getTime()).toFixed(0));
-                    if( lockEndUnix > todayUnix) {
+                    if (lockEndUnix > todayUnix) {
                         isLocked = true;
                         const lockPeriodInDays = (lockEndUnix - lockStartUnix) / (1000 * 3600 * 24);
                         lockMultiplier = this.lockMultipliers.find(multiplier => multiplier.days === lockPeriodInDays);
@@ -179,19 +179,31 @@ export default class NftsData {
                     }
                 }
                 redemptionRate = nftData.redemptionRate;
-                if(redemptionRate) {
-                    if(lockMultiplier) {
+                if (redemptionRate) {
+                    if (lockMultiplier) {
                         redemptionRate = redemptionRate * lockMultiplier.multiplier;
                     }
                     const currDate = new Date().getTime() / 1000;
-                    const daysElapsed =
-                        Math.abs(currDate - stakeAccount.account.startDate) /
-                        (60 * 60 * 24);
-                    const amountRedeemed =
-                        stakeAccount.account.amountRedeemed.toNumber() / 1e6;
-                    estimateRewards = redemptionRate * daysElapsed - amountRedeemed;
+                    let halvening1_start_time = 167000000;
+
+                    let to_days = 60 * 60 * 24;
+
+                    if (stakeAccount.account.startDate > halvening1_start_time) {
+                        let day_dif = (currDate - stakeAccount.account.startDate);
+                        let days_elapsed = day_dif / to_days;
+                        estimateRewards = (nftData.redemptionRate / 2) * days_elapsed;
+                    } else {
+                        let day_dif_after_halvening = (currDate - halvening1_start_time);
+                        let day_dif_before_halvening = (halvening1_start_time - stakeAccount.account.startDate);
+                        let days_elapsed_after_halvening = day_dif_after_halvening / to_days;
+                        let days_elapsed_before_halvening = day_dif_before_halvening / to_days;
+                        estimateRewards = (nftData.redemptionRate * days_elapsed_before_halvening) + ((nftData.redemptionRate / 2) * days_elapsed_after_halvening);
+                    }
                 }
             }
+
+
+
             return {
                 ...nftData,
                 redemptionRate,
@@ -209,7 +221,7 @@ export default class NftsData {
         const stakes = await this.program.account.stake.all();
         return stakes.filter((stake: any) => stake.account.withdrawn === false).length;
     }
-    private async getNftsData(mints:string[]) {
+    private async getNftsData(mints: string[]) {
         const metaplexToken = getMetaplexToken();
 
         const pdas = await Promise.all(mints.map(async mint => {
@@ -248,7 +260,7 @@ export default class NftsData {
             const uri = metadata.data.data.uri
             const { data } = await axios.get(uri);
             let image = data?.image;
-            if(image?.includes('ipfs.dweb.link')){
+            if (image?.includes('ipfs.dweb.link')) {
                 // We need to transform https://xxx.ipfs.dweb.link to https://infura-ipfs.io/ipfs/xxx
                 // nextjs does not allow whitelisting subdomains so we need to fetch images from 1 root domain
                 const id = image.split('//').pop().split('.')[0];
